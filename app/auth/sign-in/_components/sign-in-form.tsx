@@ -44,7 +44,17 @@ export const SignInForm = () => {
   };
 
   const { mutate: signInUser, isPending } = useMutation({
-    mutationFn: SIGN_IN_WITH_GOOGLE,
+    mutationFn: SIGN_IN_USER,
+    onSuccess: (data) => {
+      toast.success(data?.success, {
+        id: "sign-in-user",
+      });
+    },
+    onError: (error) => {
+      toast.error(error.message, {
+        id: "sign-in-user",
+      });
+    },
   });
 
   const form = useForm<z.infer<typeof SignInSchema>>({
@@ -55,15 +65,15 @@ export const SignInForm = () => {
     },
   });
 
-  //   function onSubmit(values: z.infer<typeof SignInSchema>) {
-  //     toast.loading("Login...", {
-  //       id: "sign-in-user",
-  //     });
-  //     signInUser({ values, callbackUrl: callbackUrl ? callbackUrl : "/" });
-  //   }
+  function onSubmit(values: z.infer<typeof SignInSchema>) {
+    toast.loading("Login...", {
+      id: "sign-in-user",
+    });
+    signInUser({ values, callbackUrl: callbackUrl ? callbackUrl : "/" });
+  }
 
-  const handleSignIn = () => {
-    signInUser();
+  const signInWithGoogle = async () => {
+    await SIGN_IN_WITH_GOOGLE({ callback: callbackUrl });
   };
 
   return (
@@ -75,7 +85,7 @@ export const SignInForm = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-8">
-        {/* <Form {...form}>
+        <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
@@ -142,7 +152,7 @@ export const SignInForm = () => {
               </div>
             </div>
           </form>
-        </Form> */}
+        </Form>
         <div className="flex items-center">
           <div className="h-[1px] w-full bg-slate-500" />
           <Badge variant="outline">OR</Badge>
@@ -152,7 +162,7 @@ export const SignInForm = () => {
           variant="outline"
           className="relative flex w-full items-center justify-center"
           disabled={isPending}
-          onClick={handleSignIn}
+          onClick={signInWithGoogle}
         >
           <FcGoogle className="absolute left-5" size={20} />
           Continue with Google

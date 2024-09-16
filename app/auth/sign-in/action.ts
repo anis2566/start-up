@@ -27,8 +27,8 @@ export const SIGN_IN_USER = async ({ values, callbackUrl }: SignInUser) => {
     await signIn("credentials", {
       email: values.email,
       password: values.password,
-      //   redirect: true,
-      //   redirectTo: callbackUrl ? callbackUrl : "/",
+        redirect: true,
+        redirectTo: callbackUrl ? callbackUrl : "/",
     });
 
     return { success: "Login successful", user };
@@ -52,9 +52,12 @@ export const SIGN_IN_USER = async ({ values, callbackUrl }: SignInUser) => {
   }
 };
 
-export const SIGN_IN_WITH_GOOGLE = async () => {
+type GoogleSignIn = {
+  callback: string | null;
+};
+
+export const SIGN_IN_WITH_GOOGLE = async ({ callback }: GoogleSignIn) => {
   await signIn("google", {
-    // redirectTo: callback ? callback : "/",
-    redirectTo: "/",
+    redirectTo: callback ? callback : "/",
   });
 };
