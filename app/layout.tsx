@@ -7,7 +7,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { auth } from "@/auth";
-import { WebPushProvider } from "@/providers/web-push-provider";
+import { ModalProvider } from "@/providers/modal-provider";
+// import { WebPushProvider } from "@/providers/web-push-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,17 +29,17 @@ export default async function RootLayout({
       <body className={inter.className}>
         <SessionProvider session={session}>
           <QueryProvider>
-            <WebPushProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="light"
-                disableTransitionOnChange
-              >
-                {children}
-                <Toaster />
-                {/* <ModalProvider /> */}
-              </ThemeProvider>
-            </WebPushProvider>
+            {/* <WebPushProvider> */}
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              disableTransitionOnChange
+            >
+              {children}
+              <Toaster />
+              <ModalProvider />
+            </ThemeProvider>
+            {/* </WebPushProvider> */}
           </QueryProvider>
         </SessionProvider>
       </body>
