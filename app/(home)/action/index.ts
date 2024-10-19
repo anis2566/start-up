@@ -43,3 +43,33 @@ export const GET_PUBLICATIONS = async () => {
   });
   return publications;
 };
+
+export const GET_SUB_CATEGORIES = async (categoryId: string) => {
+  const subCategories = await db.subCategory.findMany({
+    where: {
+      status: CategoryStatus.Active,
+      categoryId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return subCategories;
+};
+
+export const GET_CATEGORIES_HOME = async () => {
+  const categories = await db.category.findMany({
+    where: {
+      status: CategoryStatus.Active,
+    },
+    include: {
+      subCategories: {
+        take: 4,
+      }
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return categories;
+};

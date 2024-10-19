@@ -4,6 +4,10 @@ import { revalidatePath } from "next/cache";
 
 import { db } from "@/lib/prisma";
 import { CategorySchema, CategorySchemaType } from "@/schema/category.schema";
+import {
+  SubCategorySchema,
+  SubCategorySchemaType,
+} from "@/schema/sub-category.schema";
 
 export const CREATE_CATEGORY_ACTION = async (values: CategorySchemaType) => {
   const { data, success } = CategorySchema.safeParse(values);
@@ -121,6 +125,140 @@ export const DELETE_CATEGORY_ACTION = async (id: string) => {
   } catch (error) {
     return {
       error: "Failed to delete category",
+    };
+  }
+};
+
+type CreateSubCategory = {
+  categoryId: string;
+  values: SubCategorySchemaType;
+};
+
+export const CREATE_SUB_CATEGORY_ACTION = async ({
+  categoryId,
+  values,
+}: CreateSubCategory) => {
+  const { data, success } = SubCategorySchema.safeParse(values);
+
+  if (!success) {
+    return {
+      error: "Invalid input values",
+    };
+  }
+
+  try {
+    const subCategory = await db.subCategory.findFirst({
+      where: {
+        name: data.name,
+      },
+    });
+
+    if (subCategory) {
+      return {
+        error: "Sub category already exists",
+      };
+    }
+
+    await db.subCategory.create({
+      data: {
+        ...data,
+        categoryId,
+      },
+    });
+
+    revalidatePath("/dashboard/categories");
+
+    return {
+      success: "Sub category created",
+      categoryId,
+    };
+  } catch (error) {
+    return {
+      error: "Failed to create sub category",
+    };
+  }
+};
+
+type EditSubCategory = {
+  id: string;
+  values: SubCategorySchemaType;
+};
+
+export const EDIT_SUB_CATEGORY_ACTION = async ({
+  id,
+  values,
+}: EditSubCategory) => {
+  const { data, success } = SubCategorySchema.safeParse(values);
+
+  if (!success) {
+    return {
+      error: "Invalid input values",
+    };
+  }
+
+  try {
+    const subCategory = await db.subCategory.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!subCategory) {
+      return {
+        error: "Sub category not found",
+      };
+    }
+
+    await db.subCategory.update({
+      where: {
+        id,
+      },
+      data: {
+        ...data,
+      },
+    });
+
+    revalidatePath("/dashboard/categories");
+
+    return {
+      success: "Sub category updated",
+      categoryId: subCategory.categoryId,
+    };
+  } catch (error) {
+    return {
+      error: "Failed to update sub category",
+    };
+  }
+};
+
+export const DELETE_SUB_CATEGORY_ACTION = async (id: string) => {
+  try {
+    const subCategory = await db.subCategory.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!subCategory) {
+      return {
+        error: "Sub category not found",
+      };
+    }
+
+    await db.subCategory.delete({
+      where: {
+        id,
+      },
+    });
+
+    revalidatePath(`/dashboard/categories/${subCategory.categoryId}/sub`);
+
+    return {
+      success: "Sub category deleted",
+    };
+  } catch (error) {
+    return {
+      error: "Failed to delete sub category",
     };
   }
 };
