@@ -16,6 +16,7 @@ import {
   ScanSearch,
   MessageCircleWarning,
   UserPen,
+  Book,
 } from "lucide-react";
 
 type Submenu = {
@@ -111,6 +112,26 @@ export function getAdminMenuList(pathname: string): Group[] {
               href: "/dashboard/publications",
               label: "List",
               active: pathname === "/dashboard/publications",
+              icon: List,
+            },
+          ],
+        },
+        {
+          href: "",
+          label: "Books",
+          active: pathname.includes("/dashboard/books"),
+          icon: Book,
+          submenus: [
+            {
+              href: "/dashboard/books/new",
+              label: "New",
+              active: pathname === "/dashboard/books/new",
+              icon: PlusCircle,
+            },
+            {
+              href: "/dashboard/books",
+              label: "List",
+              active: pathname === "/dashboard/books",
               icon: List,
             },
           ],
