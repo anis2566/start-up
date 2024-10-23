@@ -1,12 +1,15 @@
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
 
 import { db } from "@/lib/prisma";
-import { Metadata } from "next";
 import { BookThumbnail } from "./_components/book-thmubnail";
-import { Layers3, UserRoundPen } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
+import BookDetails from "./_components/book-details";
+import RelatedBooks from "./_components/related-books";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Preview } from "@/components/preview";
+import Specification from "./_components/specification";
+import { Author } from "./_components/author";
+
 
 interface Props {
     params: {
@@ -19,7 +22,7 @@ export const metadata: Metadata = {
     description: "Book details.",
 };
 
-const BookDetails = async ({ params }: Props) => {
+const Book = async ({ params }: Props) => {
     const book = await db.book.findUnique({
         where: {
             id: params.id,
@@ -28,40 +31,44 @@ const BookDetails = async ({ params }: Props) => {
             author: true,
             category: true,
             subCategory: true,
+            publication: true,
         }
     })
 
     if (!book) return redirect("/books");
 
     return (
-        <div className="px-3 md:px-0 grid md:grid-cols-3 gap-6 mt-4">
-            <div className="md:col-span-2 grid md:grid-cols-3 gap-3 p-2">
-                <BookThumbnail imageUrl={book.imageUrl} />
-                <div className="md:col-span-2 space-y-3">
-                    <h1 className="text-xl font-semibold text-gray-700 dark:text-accent-foreground">{book.name}</h1>
-                    <p className="text-sm text-muted-foreground truncate">{book?.shortDescription}</p>
-
-                    <div className="flex items-center gap-2">
-                        <UserRoundPen className="w-4 h-4 text-muted-foreground" />
-                        <Link href={`/authors/${book.author.id}`} className="text-sm text-primary hover:underline">{book.author.name}</Link>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Layers3 className="w-4 h-4 text-muted-foreground" />
-                        <div className="flex items-center gap-x-2">
-                            {
-                                book.subCategoryId && (
-                                    <Badge className="rounded-full">{book.subCategory?.name}</Badge>
-                                )
-                            }
-                            <p>in</p>
-                            <Link href={`/categories/${book.category.id}`} className="text-sm text-primary hover:underline">{book.category.name}</Link>
-                        </div>
-                    </div>
+        <div className="px-3 md:px-0 mt-4 space-y-6">
+            <div className="grid md:grid-cols-4 gap-6">
+                <div className="md:col-span-3 grid md:grid-cols-3 gap-3 p-2">
+                    <BookThumbnail imageUrl={book.imageUrl} />
+                    <BookDetails book={book} />
+                </div>
+                <div className="p-2 border-l border-gray-200 dark:border-gray-800">
+                    <RelatedBooks categoryId={book.categoryId} subCategoryId={book.subCategoryId} />
                 </div>
             </div>
-            <div>ljalf</div>
+            <Tabs defaultValue="summary" className="w-full">
+                <TabsList className="w-full">
+                    <TabsTrigger value="summary" className="px-1.5 md:px-3">Summary</TabsTrigger>
+                    <TabsTrigger value="specification" className="px-1.5 md:px-3">Specification</TabsTrigger>
+                    <TabsTrigger value="author" className="px-1.5 md:px-3">Author</TabsTrigger>
+                    <TabsTrigger value="reviews" className="px-1.5 md:px-3">Reviews</TabsTrigger>
+                </TabsList>
+                <TabsContent value="summary">
+                    <Preview value={book.description} />
+                </TabsContent>
+                <TabsContent value="specification">
+                    <Specification book={book} />
+                </TabsContent>
+                <TabsContent value="author">
+                    <Author author={book.author} />
+                </TabsContent>
+                <TabsContent value="reviews">Change your aut here.</TabsContent>
+            </Tabs>
+
         </div>
     )
 }
 
-export default BookDetails
+export default Book

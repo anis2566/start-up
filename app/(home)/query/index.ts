@@ -5,6 +5,7 @@ import {
   GET_CATEGORIES,
   GET_CATEGORIES_HOME,
   GET_PUBLICATIONS,
+  GET_RELATED_BOOKS,
   GET_SUB_CATEGORIES,
 } from "../action";
 
@@ -48,6 +49,18 @@ export const useGetCategoriesHome = () => {
   return useQuery({
     queryKey: ["categories-for-home"],
     queryFn: async () => await GET_CATEGORIES_HOME(),
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+};
+
+export const useGetRelatedBooks = (
+  categoryId: string,
+  subCategoryId: string | null,
+) => {
+  return useQuery({
+    queryKey: ["related-books"],
+    queryFn: async () => await GET_RELATED_BOOKS(categoryId, subCategoryId),
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 60 * 24,
   });

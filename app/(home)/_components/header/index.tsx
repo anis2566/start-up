@@ -5,6 +5,7 @@ import { Search } from "./search"
 import { SignInButton } from "./sign-in-button"
 import { SellerButton } from "./seller-button"
 import { CartButton } from "./cart-button"
+import { WishlistButton } from "./wishlist-button"
 
 export const Header = () => {
     return (
@@ -17,6 +18,7 @@ export const Header = () => {
                 <Separator className="hidden md:block h-6" orientation="vertical" />
                 <div className="flex items-center gap-x-2">
                     <SignInButton className="flex md:hidden" />
+                    <WishlistButton />
                     <CartButton />
                 </div>
             </div>

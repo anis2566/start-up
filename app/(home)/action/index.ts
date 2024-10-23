@@ -65,11 +65,30 @@ export const GET_CATEGORIES_HOME = async () => {
     include: {
       subCategories: {
         take: 4,
-      }
+      },
     },
     orderBy: {
       createdAt: "desc",
     },
   });
   return categories;
+};
+
+export const GET_RELATED_BOOKS = async (
+  categoryId: string,
+  subCategoryId: string | null,
+) => {
+  const books = await db.book.findMany({
+    where: {
+      categoryId,
+      ...(subCategoryId ? { subCategoryId } : {}),
+    },
+    include: {
+      author: true,
+    },
+    orderBy: {
+      totalReview: "asc",
+    },
+  });
+  return books;
 };

@@ -12,3 +12,7 @@ export function saltAndHashPassword(password: any) {
   const hash = bcrypt.hashSync(password, salt);
   return hash;
 }
+
+export const savingsPercentage = (price: number, discountPrice: number) => {
+  return Math.round(((price - discountPrice) / price) * 100);
+};

@@ -20,7 +20,7 @@ export const BookSchema = z.object({
   stock: z.number().min(1, "stock must be greater than 0"),
   status: z
     .nativeEnum(BookStatus)
-    .refine((status) => status !== BookStatus.Pending, {
+    .refine((val) => Object.values(BookStatus).includes(val), {
       message: "required",
     }),
 });

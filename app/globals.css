@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "@smastrom/react-rating/style.css";
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -86,4 +88,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.custom-quill .ql-container .ql-editor p span {
+  color: #22c55e; /* Equivalent to text-green-500 */
 }
