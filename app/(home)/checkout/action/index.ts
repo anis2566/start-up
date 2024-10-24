@@ -23,7 +23,7 @@ export const CREATE_ORDER_ACTION = async (values: OrderSchemaType) => {
   const { userId } = await GET_USER();
 
   try {
-    await db.order.create({
+    const order = await db.order.create({
       data: {
         name: data.name,
         phone: data.phone,
@@ -44,10 +44,25 @@ export const CREATE_ORDER_ACTION = async (values: OrderSchemaType) => {
         },
         userId,
       },
+      include: {
+        orderItems: true,
+      },
     });
+
+    for (const item of order.orderItems) {
+      await db.book.update({
+        where: {
+          id: item.bookId,
+        },
+        data: {
+          stock: { decrement: item.quantity },
+        },
+      });
+    }
 
     return {
       success: "Order placed.",
+      id: order.id,
     };
   } catch (error) {
     return {

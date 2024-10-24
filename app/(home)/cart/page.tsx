@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Heart, Minus, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Author, Book } from "@prisma/client";
+import { useSession } from "next-auth/react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -20,6 +21,7 @@ interface BookWithAuthor extends Book {
 const Cart = () => {
     const { cart, removeFromCart, incrementQuantity, decrementQuantity } = useCart();
     const { addToWishlist } = useWishlist();
+    const { data: session } = useSession()
 
     const handleRemoveFromCart = (bookId: string) => {
         removeFromCart(bookId);
@@ -150,12 +152,24 @@ const Cart = () => {
                             <p>Total</p>
                             <p>৳{cart.reduce((acc, item) => acc + (item.quantity * item.price), 100)}</p>
                         </div>
-                        <Button className="w-full" asChild>
-                            <Link href="/checkout">
-                                Checkout
-                                <ArrowRight className="w-4 h-4 ml-2 animate-pulse" />
-                            </Link>
-                        </Button>
+                        {
+                            session && session.userId ? (
+
+                                <Button className="w-full" asChild>
+                                    <Link href="/checkout">
+                                        Checkout
+                                        <ArrowRight className="w-4 h-4 ml-2 animate-pulse" />
+                                    </Link>
+                                </Button>
+                            ) : (
+                                <Button className="w-full" asChild>
+                                    <Link href={`/auth/sign-in?callbackUrl=/cart`}>
+                                        Login to checkout
+                                        <ArrowRight className="w-4 h-4 ml-2 animate-pulse" />
+                                    </Link>
+                                </Button>
+                            )
+                        }
                     </CardContent>
                 </Card>
             </div>

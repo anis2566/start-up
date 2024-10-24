@@ -17,10 +17,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { LoadingButton } from "@/components/loading-button";
 import { useCart } from "@/hooks/use-cart";
 import { OrderSchema, OrderSchemaType } from "@/schema/order.schema";
+import { useCreateOrderMutation } from "../mutation";
+
 export const CheckoutForm = () => {
     const [districts, setDistricts] = useState<{ district: string }[]>([])
 
     const { cart } = useCart();
+    const { mutate, isPending } = useCreateOrderMutation()
 
     useEffect(() => {
         const fetchDistricts = async () => {
@@ -64,10 +67,8 @@ export const CheckoutForm = () => {
     })
 
     const onSubmit = (data: OrderSchemaType) => {
-        alert("success")
+        mutate(data)
     }
-
-    console.log(form.formState.errors)
 
     const totalPrice = cart.reduce((acc, item) => acc + (item.quantity * item.price), 0);
 
@@ -80,7 +81,7 @@ export const CheckoutForm = () => {
                             <CardTitle>Shipping Address</CardTitle>
                             <CardDescription>Please fill up the form to continue</CardDescription>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="space-y-4">
                             <FormField
                                 control={form.control}
                                 name="name"
@@ -88,7 +89,7 @@ export const CheckoutForm = () => {
                                     <FormItem>
                                         <FormLabel>Name</FormLabel>
                                         <FormControl>
-                                            <Input {...field} />
+                                            <Input {...field} disabled={isPending} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -103,7 +104,7 @@ export const CheckoutForm = () => {
                                         <FormItem>
                                             <FormLabel>Phone</FormLabel>
                                             <FormControl>
-                                                <Input {...field} />
+                                                <Input {...field} disabled={isPending} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -117,7 +118,7 @@ export const CheckoutForm = () => {
                                         <FormItem>
                                             <FormLabel>Alt Phone</FormLabel>
                                             <FormControl>
-                                                <Input {...field} />
+                                                <Input {...field} disabled={isPending} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -132,7 +133,7 @@ export const CheckoutForm = () => {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Country</FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
                                                 <FormControl>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Select country" />
@@ -163,6 +164,7 @@ export const CheckoutForm = () => {
                                                     }
                                                 }}
                                                 defaultValue={field.value}
+                                                disabled={isPending}
                                             >
                                                 <FormControl>
                                                     <SelectTrigger>
@@ -189,7 +191,7 @@ export const CheckoutForm = () => {
                                         <FormItem>
                                             <FormLabel>Thana</FormLabel>
                                             <FormControl>
-                                                <Input {...field} />
+                                                <Input {...field} disabled={isPending} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -203,7 +205,7 @@ export const CheckoutForm = () => {
                                         <FormItem>
                                             <FormLabel>Zone</FormLabel>
                                             <FormControl>
-                                                <Input {...field} />
+                                                <Input {...field} disabled={isPending} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -219,7 +221,7 @@ export const CheckoutForm = () => {
                                     <FormItem>
                                         <FormLabel>Address</FormLabel>
                                         <FormControl>
-                                            <Textarea {...field} rows={3} placeholder="বাসা/ফ্ল্যাট নম্বর, পাড়া-মহল্লার নাম, পরিচিতির এলাকা উল্লেখ করুন" />
+                                            <Textarea {...field} rows={3} placeholder="বাসা/ফ্ল্যাট নম্বর, পাড়া-মহল্লার নাম, পরিচিতির এলাকা উল্লেখ করুন" disabled={isPending} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -244,6 +246,7 @@ export const CheckoutForm = () => {
                                                 onValueChange={field.onChange}
                                                 defaultValue={field.value}
                                                 className="flex flex-col space-y-1"
+                                                disabled={isPending}
                                             >
                                                 <FormItem className="space-y-3">
                                                     <div>
@@ -288,13 +291,13 @@ export const CheckoutForm = () => {
                                 <p>৳{totalPrice + form.watch("shippingCharge")}</p>
                             </div>
                             <div className="flex items-center gap-x-2 mt-4">
-                                <Input type="text" placeholder="Enter your coupon code" />
-                                <Button variant="secondary">Apply</Button>
+                                <Input type="text" placeholder="Enter your coupon code" disabled={isPending} />
+                                <Button variant="secondary" disabled={isPending}>Apply</Button>
                             </div>
                         </CardContent>
                     </Card>
                     <LoadingButton
-                        isLoading={false}
+                        isLoading={isPending}
                         title={`Confirm Order ৳${totalPrice + form.watch("shippingCharge")}`}
                         loadingTitle="Processing..."
                         onClick={() => { }}

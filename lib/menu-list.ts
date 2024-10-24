@@ -17,6 +17,7 @@ import {
   MessageCircleWarning,
   UserPen,
   Book,
+  CalendarArrowUp,
 } from "lucide-react";
 
 type Submenu = {
@@ -135,6 +136,13 @@ export function getAdminMenuList(pathname: string): Group[] {
               icon: List,
             },
           ],
+        },
+        {
+          href: "/dashboard/orders",
+          label: "Orders",
+          active: pathname.includes("/dashboard/orders"),
+          icon: CalendarArrowUp,
+          submenus: [],
         },
       ],
     },

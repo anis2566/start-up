@@ -32,7 +32,7 @@ interface BookWithRelations extends Book {
     author: Author;
     category: Category;
     publication: Publication;
-    subCategory: SubCategory;
+    subCategory: SubCategory | null;
 }
 
 interface Props {
@@ -53,7 +53,7 @@ export const EditBookForm = ({ book }: Props) => {
         setSelectedAuthor(book.author.name);
         setSelectedCategory(book.category.name);
         setSelectedPublisher(book.publication.name);
-        setSelectedSubCategory(book.subCategory.name);
+        setSelectedSubCategory(book.subCategory?.name ?? "");
     }, [book]);
 
     const { mutate, isPending } = useEditBookMutation();
