@@ -23,6 +23,18 @@ import { db } from "@/lib/prisma";
 import { CustomPagination } from "@/components/custom-pagination";
 import { OrderList } from "./_components/order-list";
 import { Header } from "./_components/header";
+import { Button } from "@/components/ui/button"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 export const metadata: Metadata = {
     title: "BookGhor | Orders",
@@ -100,7 +112,7 @@ const Orders = async ({ searchParams }: Props) => {
                     <CardDescription>Manage and organize orders.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <Header />
+                    {/* <Header /> */}
                     <OrderList orders={orders} />
                     <CustomPagination totalPages={totalPages} />
                 </CardContent>

@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OrderStatus } from "@prisma/client";
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -20,12 +20,15 @@ const formSchema = z.object({
         }),
 });
 
-export const OrderStatusModal = () => {
-    const { open, id, onClose } = useOrder();
+interface Props {
+    open: boolean;
+    id: string;
+    onClose: () => void;
+}
 
-    const { mutate, isPending } = useUpdateOrderStatusMutation({
-        onClose,
-    });
+export const OrderStatusModal = ({ open, id, onClose }: Props) => {
+
+    const { mutate, isPending } = useUpdateOrderStatusMutation();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

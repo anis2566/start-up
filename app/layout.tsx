@@ -27,19 +27,19 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <SessionProvider session={session}>
-          <QueryProvider>
-            {/* <WebPushProvider> */}
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="light"
-              disableTransitionOnChange
-            >
+          {/* <WebPushProvider> */}
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            disableTransitionOnChange
+          >
+            <QueryProvider>
               {children}
               <Toaster />
               <ModalProvider />
-            </ThemeProvider>
-            {/* </WebPushProvider> */}
-          </QueryProvider>
+            </QueryProvider>
+          </ThemeProvider>
+          {/* </WebPushProvider> */}
         </SessionProvider>
       </body>
     </html>
