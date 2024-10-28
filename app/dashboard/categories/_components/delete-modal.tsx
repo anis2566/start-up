@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
+
 import {
     AlertDialog,
     AlertDialogAction,
@@ -11,16 +13,24 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-import { useCategory } from "@/hooks/use-category";
 import { useDeleteCategoryMutation } from "../mutation";
 
 export const DeleteCategoryModal = () => {
-    const { open, id, onClose } = useCategory();
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const id = searchParams.get("id");
+    const open = searchParams.get("open") === "deleteCategory";
+
+    const onClose = () => {
+        router.push("/dashboard/categories");
+    }
 
     const { mutate, isPending } = useDeleteCategoryMutation({ onClose });
 
     const handleDelete = () => {
-        mutate(id);
+        if (id) {
+            mutate(id);
+        }
     };
 
     return (

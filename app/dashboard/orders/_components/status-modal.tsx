@@ -4,12 +4,12 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OrderStatus } from "@prisma/client";
+import { useRouter, useSearchParams } from "next/navigation";
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { useOrder } from "@/hooks/use-order";
 import { LoadingButton } from "@/components/loading-button";
 import { useUpdateOrderStatusMutation } from "../mutation";
 
@@ -20,15 +20,18 @@ const formSchema = z.object({
         }),
 });
 
-interface Props {
-    open: boolean;
-    id: string;
-    onClose: () => void;
-}
+export const OrderStatusModal = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const open = searchParams.get("open") === "changeStatus";
+    const id = searchParams.get("id");
+    const path = searchParams.get("path");
 
-export const OrderStatusModal = ({ open, id, onClose }: Props) => {
+    const onClose = () => {
+        router.push(path || "/dashboard/orders");
+    }
 
-    const { mutate, isPending } = useUpdateOrderStatusMutation();
+    const { mutate, isPending } = useUpdateOrderStatusMutation({ onClose });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -38,6 +41,7 @@ export const OrderStatusModal = ({ open, id, onClose }: Props) => {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        if (!id) return;
         mutate({
             id,
             status: values.status,
@@ -45,7 +49,7 @@ export const OrderStatusModal = ({ open, id, onClose }: Props) => {
     };
 
     return (
-        <Dialog open={open} onOpenChange={onClose}>
+        <Dialog open={open && !!id} onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Order Status</DialogTitle>

@@ -1,5 +1,3 @@
-"use client";
-
 import { Author, Book, BookStatus, Category, Publication } from "@prisma/client";
 import { EllipsisVertical, Pen, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -17,8 +15,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-import { useBook } from "@/hooks/use-book";
-
 interface BookWithRelations extends Book {
     category: Category;
     author: Author;
@@ -30,7 +26,6 @@ interface Props {
 }
 
 export const BookList = ({ books }: Props) => {
-    const { onOpen } = useBook();
 
     return (
         <Table>
@@ -85,12 +80,11 @@ export const BookList = ({ books }: Props) => {
                                             Edit
                                         </Link>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        className="w-flex items-center gap-x-3"
-                                        onClick={() => onOpen(book.id)}
-                                    >
-                                        <Trash2 className="h-4 w-4 text-rose-500" />
-                                        Delete
+                                    <DropdownMenuItem asChild>
+                                        <Link href={`/dashboard/books?open=deleteBook&id=${book.id}`} className="flex items-center gap-x-3">
+                                            <Trash2 className="h-4 w-4 text-rose-500" />
+                                            Delete
+                                        </Link>
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>

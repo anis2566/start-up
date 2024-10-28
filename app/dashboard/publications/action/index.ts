@@ -47,3 +47,87 @@ export const CREATE_PUBLICATION_ACTION = async (
     };
   }
 };
+
+
+type EditPublication = {
+  id: string;
+  values: PublicationSchemaType;
+};
+
+export const EDIT_PUBLICATION_ACTION = async ({
+  id,
+  values,
+}: EditPublication) => {
+  const { data, success } = PublicationSchema.safeParse(values);
+
+  if (!success) {
+    return {
+      error: "Invalid input values",
+    };
+  }
+
+  try {
+    const publication = await db.publication.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!publication) {
+      return {
+        error: "Publication not found",
+      };
+    }
+
+    await db.publication.update({
+      where: {
+        id,
+      },
+      data: {
+        ...data,
+      },
+    });
+
+    revalidatePath("/dashboard/publications");
+
+    return {
+      success: "Publication updated",
+    };
+  } catch (error) {
+    return {
+      error: "Failed to update publication",
+    };
+  }
+};
+
+export const DELETE_PUBLICATION_ACTION = async (id: string) => {
+  try {
+    const publication = await db.publication.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!publication) {
+      return {
+        error: "Publication not found",
+      };
+    }
+
+    await db.publication.delete({
+      where: {
+        id,
+      },
+    });
+
+    revalidatePath("/dashboard/publications");
+
+    return {
+      success: "Publication deleted",
+    };
+  } catch (error) {
+    return {
+      error: "Failed to delete publication",
+    };
+  }
+};

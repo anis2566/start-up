@@ -1,5 +1,3 @@
-"use client"
-
 import { Category, CategoryStatus } from "@prisma/client";
 import { BringToFront, EllipsisVertical, Eye, Pen, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -10,14 +8,18 @@ import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
-import { useCategory } from "@/hooks/use-category";
+import { EmptyData } from "@/components/empty-data";
+
 
 interface Props {
     categories: Category[];
 }
 
 export const CategoryList = ({ categories }: Props) => {
-    const { onOpen } = useCategory();
+
+    if (categories.length === 0) {
+        return <EmptyData title="No categories found" />
+    }
 
     return (
         <Table>
@@ -84,12 +86,11 @@ export const CategoryList = ({ categories }: Props) => {
                                             Edit
                                         </Link>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        className="w-flex items-center gap-x-3"
-                                        onClick={() => onOpen(category.id)}
-                                    >
-                                        <Trash2 className="h-4 w-4 text-rose-500" />
-                                        Delete
+                                    <DropdownMenuItem asChild>
+                                        <Link href={`/dashboard/categories?open=deleteCategory&id=${category.id}`} className="flex items-center gap-x-3">
+                                            <Trash2 className="h-4 w-4 text-rose-500" />
+                                            Delete
+                                        </Link>
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>

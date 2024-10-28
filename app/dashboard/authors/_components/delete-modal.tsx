@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
+
 import {
     AlertDialog,
     AlertDialogAction,
@@ -11,16 +13,25 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-import { useAuthor } from "@/hooks/use-authro";
 import { useDeleteAuthorMutation } from "../mutation";
 
 export const DeleteAuthorModal = () => {
-    const { open, id, onClose } = useAuthor();
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const id = searchParams.get("id");
+    const open = searchParams.get("open") === "deleteAuthor";
+
+    const onClose = () => {
+        router.push("/dashboard/authors");
+    }
 
     const { mutate, isPending } = useDeleteAuthorMutation({ onClose });
 
+
     const handleDelete = () => {
-        mutate(id);
+        if (id) {
+            mutate(id);
+        }
     };
 
     return (

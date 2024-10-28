@@ -3,14 +3,20 @@ import { toast } from "sonner";
 
 import { UPDATE_ORDER_STATUS_ACTION } from "../action";
 
-export const useUpdateOrderStatusMutation = () => {
-    
+interface UpdateOrderStatusMutationProps {
+  onClose: () => void;
+}
+
+export const useUpdateOrderStatusMutation = ({
+  onClose,
+}: UpdateOrderStatusMutationProps) => {
   return useMutation({
     mutationFn: UPDATE_ORDER_STATUS_ACTION,
     onSuccess: (data) => {
       if (data?.success) {
         toast.success(data.success);
       }
+      onClose();
     },
     onError: (error) => {
       toast.error(error.message);

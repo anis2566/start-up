@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { OrderStatus, PaymentStatus } from "@prisma/client";
 
 import {
     Breadcrumb,
@@ -19,14 +18,14 @@ import {
 } from "@/components/ui/card";
 
 import { ContentLayout } from "../_components/content-layout";
+import { ReviewList } from "./_components/reveiw-list";
 import { db } from "@/lib/prisma";
 import { CustomPagination } from "@/components/custom-pagination";
-import { OrderList } from "./_components/order-list";
 import { Header } from "./_components/header";
 
 export const metadata: Metadata = {
-    title: "BookGhor | Orders",
-    description: "Orders list.",
+    title: "BookGhor | Reviews",
+    description: "Reviews list.",
 };
 
 interface Props {
@@ -35,51 +34,53 @@ interface Props {
         sort?: string;
         page?: string;
         perPage?: string;
-        status?: OrderStatus;
-        paymentStatus?: PaymentStatus;
-    }; 
+    };
 }
 
-const Orders = async ({ searchParams }: Props) => {
-    const { name, sort, page = "1", perPage = "5", status, paymentStatus } = searchParams;
+
+const Reviews = async ({ searchParams }: Props) => {
+    const { name, sort, page = "1", perPage = "5", } = searchParams;
 
     const itemsPerPage = parseInt(perPage, 10);
     const currentPage = parseInt(page, 10);
 
-    const [orders, totalOrders] = await Promise.all([
-        db.order.findMany({
+    const [reviews, totalReviews] = await Promise.all([
+        db.review.findMany({
             where: {
-                ...(name && { name: { contains: name, mode: "insensitive" } }),
-                ...(status && { status: status }),
-                ...(paymentStatus && { paymentStatus: paymentStatus }),
-            },
-            include: {
-                orderItems: {
-                    include: {
-                        book: true,
+                ...(name && {
+                    user: {
+                        name: {
+                            contains: name,
+                            mode: "insensitive",
+                        },
                     },
-                },
-                user: true,
+                }),
             },
             orderBy: {
                 createdAt: sort === "asc" ? "asc" : "desc",
             },
             skip: (currentPage - 1) * itemsPerPage,
             take: itemsPerPage,
-        }),
-        db.order.count({
-            where: {
-                ...(name && { name: { contains: name, mode: "insensitive" } }),
-                ...(status && { status: status }),
-                ...(paymentStatus && { paymentStatus: paymentStatus }),
+            include: {
+                book: true,
+                user: true,
             },
         }),
-    ])
+        db.review.count({
+            where: {
+                ...(name && {
+                    user: {
+                        name: { contains: name, mode: "insensitive" },
+                    },
+                }),
+            },
+        }),
+    ]);
 
-    const totalPages = Math.ceil(totalOrders / itemsPerPage);
+    const totalPages = Math.ceil(totalReviews / itemsPerPage);
 
     return (
-        <ContentLayout title="Orders">
+        <ContentLayout title="Reviews">
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
@@ -89,19 +90,19 @@ const Orders = async ({ searchParams }: Props) => {
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                        <BreadcrumbPage>Orders</BreadcrumbPage>
+                        <BreadcrumbPage>Reviews</BreadcrumbPage>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Orders</CardTitle>
-                    <CardDescription>Manage and organize orders.</CardDescription>
+                    <CardTitle>Reviews</CardTitle>
+                    <CardDescription>Manage and organize reviews.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <Header />
-                    <OrderList orders={orders} />
+                    <ReviewList reviews={reviews} />
                     <CustomPagination totalPages={totalPages} />
                 </CardContent>
             </Card>
@@ -109,4 +110,4 @@ const Orders = async ({ searchParams }: Props) => {
     )
 }
 
-export default Orders
+export default Reviews

@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { CategoryStatus } from "@prisma/client";
 
 import {
     Breadcrumb,
@@ -18,10 +19,10 @@ import {
 } from "@/components/ui/card";
 
 import { ContentLayout } from "../_components/content-layout";
-import { CategoryStatus } from "@prisma/client";
 import { db } from "@/lib/prisma";
 import { CustomPagination } from "@/components/custom-pagination";
 import { CategoryList } from "./_components/category-list";
+import { Header } from "./_components/header";
 
 export const metadata: Metadata = {
     title: "BookGhor | Categories",
@@ -88,6 +89,7 @@ const Categories = async ({ searchParams }: Props) => {
                     <CardDescription>Manage and organize categories.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                    <Header />
                     <CategoryList categories={categories} />
                     <CustomPagination totalPages={totalPages} />
                 </CardContent>

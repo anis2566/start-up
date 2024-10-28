@@ -13,19 +13,20 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-import { useDeleteBookMutation } from "../mutation";
+import { useDeleteReviewMutation } from "../mutation";
 
-export const DeleteBookModal = () => {
+
+export const DeleteReviewModal = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const id = searchParams.get("id");
-    const open = searchParams.get("open") === "deleteBook";
+    const open = searchParams.get("open") === "deleteReview";
 
     const onClose = () => {
-        router.push("/dashboard/books");
+        router.push("/dashboard/reviews");
     }
 
-    const { mutate, isPending } = useDeleteBookMutation({ onClose });
+    const { mutate, isPending } = useDeleteReviewMutation({ onClose });
 
     const handleDelete = () => {
         if (id) {
@@ -39,7 +40,7 @@ export const DeleteBookModal = () => {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete book
+                        This action cannot be undone. This will permanently delete review
                         and remove the data from your servers.
                     </AlertDialogDescription>
                 </AlertDialogHeader>

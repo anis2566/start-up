@@ -2,17 +2,26 @@
 
 import { Author, Book, Category, SubCategory, Publication } from "@prisma/client";
 import Link from "next/link";
-import { Layers3, UserRoundPen, Eye, ShoppingCart, Files, BookOpen, FilePenLine } from "lucide-react";
+import { Layers3, UserRoundPen, Eye, ShoppingCart, Files, BookOpen, FilePenLine, CornerDownLeft, Loader2 } from "lucide-react";
 import { Rating } from "@smastrom/react-rating";
 import { toast } from "sonner";
+import Image from "next/image";
+import Autoplay from "embla-carousel-autoplay"
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+} from "@/components/ui/carousel"
 
-import { savingsPercentage } from "@/lib/utils";
+
+import { cn, savingsPercentage } from "@/lib/utils";
 import { useCart } from "@/hooks/use-cart";
+import { useGetTopReviews } from "../../query";
 
 interface BookWithRelations extends Book {
     category: Category;
@@ -23,6 +32,7 @@ interface BookWithRelations extends Book {
 
 export default function BookDetails({ book }: { book: BookWithRelations }) {
     const { addToCart } = useCart();
+    const { reviews, isFetching, status } = useGetTopReviews({ bookId: book.id });
 
     const handleAddToCart = (book: BookWithRelations) => {
         addToCart({ book, price: book.discountPrice ?? book.price, quantity: 1 });
@@ -99,10 +109,21 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
                 </div>
             </div>
 
-            {/* <div className="flex items-center gap-x-2">
+            <div className="flex md:hidden">
+                <Button className="w-full" variant="outline">একটু পড়ুন</Button>
+            </div>
 
-            </div> */}
-            <div className="flex items-center gap-x-2">
+            <div className="hidden md:flex items-center gap-x-6">
+                <div className="flex items-center gap-x-2">
+                    <Image src="/cod.jpg" alt="cod" width={25} height={25} />
+                    <p className="text-sm text-muted-foreground">Cash on Delivery</p>
+                </div>
+                <div className="flex items-center gap-x-2">
+                    <CornerDownLeft className="w-6 h-6" />
+                    <p className="text-sm text-muted-foreground">7 Days Return</p>
+                </div>
+            </div>
+            <div className="hidden md:flex items-center gap-x-2">
                 <TooltipProvider delayDuration={0}>
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -129,6 +150,52 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
+            </div>
+
+            <div className={cn("flex md:hidden flex-col fixed bottom-0 left-0 right-0 z-50 px-3", reviews?.length === 0 && "hidden")}>
+                <Carousel
+                    opts={{
+                        align: "start",
+                        loop: true,
+                    }}
+                    plugins={[
+                        Autoplay({
+                            delay: 5000,
+                            stopOnMouseEnter: true,
+                        }),
+                    ]}
+                    orientation="vertical"
+                    className="w-full bg-background"
+                >
+                    <CarouselContent className="h-[80px]">
+                        {
+                            isFetching ? (
+                                <div className="flex items-center justify-center h-full">
+                                    <Loader2 className="w-6 h-6 animate-spin" />
+                                </div>
+                            ) : (
+                                reviews?.map((review) => (
+                                    <CarouselItem key={review.id}>
+                                        <div className="flex items-center gap-x-2 px-3 py-2">
+                                            <Image src={review.user.image || ""} alt={review.user.name || ""} width={20} height={20} className="rounded-full" />
+                                            <div className="w-full">
+                                                <div className="flex items-center gap-x-2">
+                                                    <p className="text-sm font-semibold">{review.user.name}</p>
+                                                    <Rating style={{ maxWidth: 50 }} value={review.rating} readOnly />
+                                                </div>
+                                                <p className="text-xs text-muted-foreground truncate">{review.content}</p>
+                                            </div>
+                                        </div>
+                                    </CarouselItem>
+                                ))
+                            )
+                        }
+                    </CarouselContent>
+                </Carousel>
+                <Button variant="default" size="lg" className="w-full" onClick={() => handleAddToCart(book)}>
+                    <ShoppingCart className="w-4 h-4 mr-2" />
+                    <span>Add to Cart</span>
+                </Button>
             </div>
         </div>
     )

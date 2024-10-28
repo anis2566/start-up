@@ -7,21 +7,6 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-
-import { useOrder } from "@/hooks/use-order";
-import { DeleteButton } from "./delete-button";
-import { OrderStatusModal } from "./status-modal";
 
 interface OrderItemWithBook extends OrderItem {
     book: Book;
@@ -37,7 +22,6 @@ interface Props {
 }
 
 export const OrderList = ({ orders }: Props) => {
-    // const { onOpen } = useOrder();
 
     return (
         <div>
@@ -109,14 +93,11 @@ export const OrderList = ({ orders }: Props) => {
                                                 View
                                             </Link>
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                            className="w-flex items-center gap-x-3"
-                                            asChild
-                                        >
-                                            <Button variant="ghost" className="w-full flex items-center gap-x-3 justify-start px-2">
+                                        <DropdownMenuItem asChild>
+                                            <Link href={`/dashboard/orders?open=changeStatus&id=${order.id}`} className="flex items-center gap-x-3">
                                                 <RefreshCcw className="h-4 w-4" />
                                                 <p>Change Status</p>
-                                            </Button>
+                                            </Link>
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>

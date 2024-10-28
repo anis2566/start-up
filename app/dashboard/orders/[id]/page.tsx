@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { OrderStatus } from "@prisma/client";
 import Image from "next/image";
+import { RefreshCcw } from "lucide-react";
 
 import {
     Breadcrumb,
@@ -21,6 +22,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 
 import { db } from "@/lib/prisma";
@@ -58,6 +60,7 @@ const OrderDetails = async ({ params }: Props) => {
     });
 
     if (!order) return redirect("/dashboard/orders");
+
     return (
         <ContentLayout title="Orders">
             <Breadcrumb>
@@ -169,10 +172,15 @@ const OrderDetails = async ({ params }: Props) => {
                         </CardContent>
                         <CardFooter>
                             <div className="flex justify-between w-full">
-                                <p>Status</p>
-                                <Badge className="rounded-full" variant={order.status === OrderStatus.Pending ? "outline" : order.status === OrderStatus.Processing ? "outline" : order.status === OrderStatus.Shipped ? "secondary" : order.status === OrderStatus.Delivered ? "default" : "destructive"}>
+                                <Badge className="rounded-full h-6" variant={order.status === OrderStatus.Pending ? "outline" : order.status === OrderStatus.Processing ? "outline" : order.status === OrderStatus.Shipped ? "secondary" : order.status === OrderStatus.Delivered ? "default" : "destructive"}>
                                     {order.status}
                                 </Badge>
+                                <Button variant="outline" disabled={order.status === OrderStatus.Delivered || order.status === OrderStatus.Cancelled}>
+                                    <Link href={`/dashboard/orders?open=changeStatus&id=${order.id}&path=/dashboard/orders/${params.id}`} className="flex items-center gap-x-3">
+                                        <RefreshCcw className="h-4 w-4" />
+                                        <p>Change Status</p>
+                                    </Link>
+                                </Button>
                             </div>
                         </CardFooter>
                     </Card>

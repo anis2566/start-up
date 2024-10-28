@@ -1,23 +1,28 @@
-import { Author, AuthorStatus } from "@prisma/client";
-import { EllipsisVertical, Pen, Trash2, Eye } from "lucide-react";
+import { Publication, PublicationStatus } from "@prisma/client";
+import { EllipsisVertical, Eye, Pen, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 import { EmptyData } from "@/components/empty-data";
 
-interface Props {
-    authors: Author[];
+interface PublicationWithBooks extends Publication {
+    books: { id: string }[];
 }
 
-export const AuthorList = ({ authors }: Props) => {
 
-    if (authors.length === 0) {
-        return <EmptyData title="No authors found" />;
+interface Props {
+    publications: PublicationWithBooks[];
+}
+
+export const PublicationList = ({ publications }: Props) => {
+
+    if (publications.length === 0) {
+        return <EmptyData title="No publications found" />
     }
 
     return (
@@ -26,30 +31,26 @@ export const AuthorList = ({ authors }: Props) => {
                 <TableRow>
                     <TableHead>Image</TableHead>
                     <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Total Books</TableHead>
-                    <TableHead>Total Sales</TableHead>
+                    <TableHead>Books</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Action</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {authors.map((author) => (
-                    <TableRow key={author.id}>
+                {publications.map((publication) => (
+                    <TableRow key={publication.id}>
                         <TableCell>
                             <Avatar>
-                                <AvatarImage src={author.imageUrl} alt={author.name} />
+                                <AvatarImage src={publication.imageUrl} />
                                 <AvatarFallback>
-                                    {author.name.charAt(0).toUpperCase()}
+                                    {publication.name.charAt(0).toUpperCase()}
                                 </AvatarFallback>
                             </Avatar>
                         </TableCell>
-                        <TableCell>{author.name}</TableCell>
-                        <TableCell>{author.email}</TableCell>
-                        <TableCell>{5}</TableCell>
-                        <TableCell>{5}</TableCell>
+                        <TableCell>{publication.name}</TableCell>
+                        <TableCell>{publication.books.length}</TableCell>
                         <TableCell>
-                            <Badge className="rounded-full" variant={author.status === AuthorStatus.Pending ? "outline" : author.status === AuthorStatus.Active ? "default" : "destructive"}>{author.status}</Badge>
+                            <Badge className="rounded-full" variant={publication.status === PublicationStatus.Active ? "default" : "destructive"}>{publication.status}</Badge>
                         </TableCell>
                         <TableCell>
                             <DropdownMenu>
@@ -62,7 +63,7 @@ export const AuthorList = ({ authors }: Props) => {
                                 <DropdownMenuContent align="end">
                                     <DropdownMenuItem asChild>
                                         <Link
-                                            href={`/dashboard/authors/${author.id}`}
+                                            href={`/dashboard/publications/${publication.id}`}
                                             className="flex items-center gap-x-3"
                                         >
                                             <Eye className="h-4 w-4" />
@@ -71,18 +72,15 @@ export const AuthorList = ({ authors }: Props) => {
                                     </DropdownMenuItem>
                                     <DropdownMenuItem asChild>
                                         <Link
-                                            href={`/dashboard/authors/edit/${author.id}`}
+                                            href={`/dashboard/publications/edit/${publication.id}`}
                                             className="flex items-center gap-x-3"
                                         >
                                             <Pen className="h-4 w-4" />
                                             Edit
                                         </Link>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        className="w-flex items-center gap-x-3"
-                                        asChild
-                                    >
-                                        <Link href={`/dashboard/authors?open=deleteAuthor&id=${author.id}`}>
+                                    <DropdownMenuItem asChild>
+                                        <Link href={`/dashboard/publications?open=deletePublication&id=${publication.id}`} className="flex items-center gap-x-3">
                                             <Trash2 className="h-4 w-4 text-rose-500" />
                                             Delete
                                         </Link>
@@ -95,4 +93,4 @@ export const AuthorList = ({ authors }: Props) => {
             </TableBody>
         </Table>
     )
-}
+};

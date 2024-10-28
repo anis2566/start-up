@@ -1,14 +1,18 @@
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 import { db } from "@/lib/prisma";
 import { BookThumbnail } from "./_components/book-thmubnail";
 import BookDetails from "./_components/book-details";
 import RelatedBooks from "./_components/related-books";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Preview } from "@/components/preview";
 import Specification from "./_components/specification";
 import { Author } from "./_components/author";
+import { Reviews } from "./_components/reveiws";
+import { DeliveryBanner } from "@/components/delivery-banner";
+import { SimilarCategoryBooks } from "./_components/similar-category-books";
 
 
 interface Props {
@@ -32,6 +36,11 @@ const Book = async ({ params }: Props) => {
             category: true,
             subCategory: true,
             publication: true,
+            reviews: {
+                select: {
+                    id: true,
+                }
+            },
         }
     })
 
@@ -48,6 +57,9 @@ const Book = async ({ params }: Props) => {
                     <RelatedBooks categoryId={book.categoryId} subCategoryId={book.subCategoryId} />
                 </div>
             </div>
+
+            <DeliveryBanner />
+
             <Tabs defaultValue="summary" className="w-full">
                 <TabsList className="w-full">
                     <TabsTrigger value="summary" className="px-1.5 md:px-3">Summary</TabsTrigger>
@@ -64,9 +76,12 @@ const Book = async ({ params }: Props) => {
                 <TabsContent value="author">
                     <Author author={book.author} />
                 </TabsContent>
-                <TabsContent value="reviews">Change your aut here.</TabsContent>
+                <TabsContent value="reviews">
+                    <Reviews bookId={book.id} rating={book.rating} reviewsCount={book.reviews.length} />
+                </TabsContent>
             </Tabs>
 
+            <SimilarCategoryBooks categoryId={book.categoryId} />
         </div>
     )
 }

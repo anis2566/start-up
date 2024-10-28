@@ -144,6 +144,13 @@ export function getAdminMenuList(pathname: string): Group[] {
           icon: CalendarArrowUp,
           submenus: [],
         },
+        {
+          href: "/dashboard/reviews",
+          label: "Reviews",
+          active: pathname.includes("/dashboard/reviews"),
+          icon: MessageCircleWarning,
+          submenus: [],
+        },
       ],
     },
     //   {
