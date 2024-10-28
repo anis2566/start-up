@@ -42,7 +42,44 @@ export default function RelatedBooks({ categoryId, subCategoryId }: Props) {
                     }),
                 ]}
                 orientation="vertical"
-                className="w-full max-w-xs"
+                className="block md:hidden w-full max-w-xs"
+            >
+                <CarouselContent className="h-[400px]">
+                    {relatedBooks?.map((book) => (
+                        <CarouselItem key={book.id}>
+                            <Link key={book.id} href={`/books/${book.id}`} className="flex gap-x-3 hover:shadow-md">
+                                <Image src={book.imageUrl} alt={book.name} width={80} height={80} />
+                                <div className="space-y-1">
+                                    <p className="text-sm font-semibold text-gray-700 dark:text-accent-foreground">{book.name}</p>
+                                    <p className="text-sm text-muted-foreground">{book.author.name}</p>
+                                    <div className="flex items-center gap-x-2">
+                                        <Rating style={{ maxWidth: 70 }} value={4.5} readOnly />
+                                        <p className="text-sm text-muted-foreground">({book.totalReview})</p>
+                                    </div>
+                                    <div className="flex items-center gap-x-2">
+                                        <p className="tracking-wider text-rose-500 line-through text-md">৳{book?.price}</p>
+                                        <p className="tracking-wider text-lg">৳{book.discountPrice}</p>
+                                    </div>
+                                </div>
+                            </Link>
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+            </Carousel>
+
+            <Carousel
+                opts={{
+                    align: "start",
+                    loop: true,
+                }}
+                plugins={[
+                    Autoplay({
+                        delay: 5000,
+                        stopOnMouseEnter: true,
+                    }),
+                ]}
+                orientation="vertical"
+                className="hidden md:block w-full max-w-xs"
             >
                 <CarouselContent className="h-[400px]">
                     {relatedBooks?.map((book) => (
