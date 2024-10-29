@@ -7,6 +7,9 @@ import { Rating } from "@smastrom/react-rating";
 import { toast } from "sonner";
 import Image from "next/image";
 import Autoplay from "embla-carousel-autoplay"
+import { Worker, Viewer } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,11 +20,21 @@ import {
     CarouselContent,
     CarouselItem,
 } from "@/components/ui/carousel"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 
 
 import { cn, savingsPercentage } from "@/lib/utils";
 import { useCart } from "@/hooks/use-cart";
 import { useGetTopReviews } from "../../query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface BookWithRelations extends Book {
     category: Category;
@@ -31,8 +44,20 @@ interface BookWithRelations extends Book {
 }
 
 export default function BookDetails({ book }: { book: BookWithRelations }) {
+    const router = useRouter();
     const { addToCart } = useCart();
     const { reviews, isFetching, status } = useGetTopReviews({ bookId: book.id });
+
+    const [numPages, setNumPages] = useState<number | null>(null);
+
+    const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+        setNumPages(numPages);
+    };
+
+
+    const handleReadClick = () => {
+        router.push(`/books/${book.id}?open=readBook`);
+    }
 
     const handleAddToCart = (book: BookWithRelations) => {
         addToCart({ book, price: book.discountPrice ?? book.price, quantity: 1 });
@@ -110,7 +135,22 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
             </div>
 
             <div className="flex md:hidden">
-                <Button className="w-full" variant="outline">একটু পড়ুন</Button>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="outline" size="lg" className="px-5">
+                            <Eye className="w-4 h-4 mr-2" />
+                            <span>একটু পড়ুন</span>
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                            <Viewer
+                                fileUrl="https://utfs.io/f/QakSe81HPnYZqouR1d0JJ6a2ZxiFwzfdjt5LpNuX9sAC0nhW"
+                            // onLoadSuccess={onDocumentLoadSuccess}
+                            />
+                        </Worker>
+                    </DialogContent>
+                </Dialog>
             </div>
 
             <div className="hidden md:flex items-center gap-x-6">
@@ -124,10 +164,28 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
                 </div>
             </div>
             <div className="hidden md:flex items-center gap-x-2">
-                <TooltipProvider delayDuration={0}>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="outline" size="lg" className="px-5">
+                            <Eye className="w-4 h-4 mr-2" />
+                            <span>একটু পড়ুন</span>
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-[900px] h-[80%]">
+                        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                            <Viewer
+                                fileUrl="https://utfs.io/f/QakSe81HPnYZqouR1d0JJ6a2ZxiFwzfdjt5LpNuX9sAC0nhW"
+                                defaultScale={1}
+                            // onLoadSuccess={onDocumentLoadSuccess}
+                            />
+                        </Worker>
+                    </DialogContent>
+                </Dialog>
+
+                {/* <TooltipProvider delayDuration={0}>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button variant="outline" size="lg" className="px-5">
+                            <Button variant="outline" size="lg" className="px-5" onClick={handleReadClick}>
                                 <Eye className="w-4 h-4 mr-2" />
                                 <span>একটু পড়ুন</span>
                             </Button>
@@ -136,7 +194,7 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
                             <p>View book</p>
                         </TooltipContent>
                     </Tooltip>
-                </TooltipProvider>
+                </TooltipProvider> */}
                 <TooltipProvider delayDuration={0}>
                     <Tooltip>
                         <TooltipTrigger asChild>

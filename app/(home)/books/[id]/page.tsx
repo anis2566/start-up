@@ -49,7 +49,7 @@ const Book = async ({ params }: Props) => {
     return (
         <div className="px-3 md:px-0 mt-4 space-y-6">
             <div className="grid md:grid-cols-4 gap-6">
-                <div className="md:col-span-3 grid md:grid-cols-3 gap-3 p-2">
+                <div className="md:col-span-3 grid md:grid-cols-3 gap-3 p-2 justify-items-center">
                     <BookThumbnail imageUrl={book.imageUrl} />
                     <BookDetails book={book} />
                 </div>
