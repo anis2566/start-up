@@ -1,10 +1,13 @@
 import React from 'react'
+import { ContentLayout } from './_components/content-layout'
 
 const Dashboard = () => {
     return (
-        <div>
-            <h1>Dashboard</h1>
-        </div>
+        <ContentLayout title='Dashboard'>
+            <div>
+                <h1>Dashboard</h1>
+            </div>
+        </ContentLayout>
     )
 }
 
