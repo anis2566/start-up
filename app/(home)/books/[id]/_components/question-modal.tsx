@@ -20,6 +20,8 @@ export const QuestionModal = () => {
     const open = searchParams.get("open") === "askQuestion";
     const id = searchParams.get("id");
 
+    if (!id) return null;
+
     useEffect(() => {
         if (open) {
             form.reset({
@@ -37,11 +39,11 @@ export const QuestionModal = () => {
         resolver: zodResolver(QuestionSchema),
         defaultValues: {
             question: "",
-            bookId: id || "",
+            bookId: id,
         },
     });
 
-    const { mutate: createQuestion, isPending } = useCreateQuestionMutation({ onClose, form });
+    const { mutate: createQuestion, isPending } = useCreateQuestionMutation({ onClose, form, bookId: id });
 
     const onSubmit = (values: QuestionSchemaType) => {
         createQuestion(values);
