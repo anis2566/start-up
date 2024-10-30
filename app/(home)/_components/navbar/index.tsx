@@ -23,7 +23,7 @@ export function Navbar() {
     return (
         <div className="hidden md:block border-b py-2">
             <NavigationMenu>
-                <NavigationMenuList>
+                <NavigationMenuList className="z-50">
                     <NavigationMenuItem>
                         <NavigationMenuTrigger>লেখক</NavigationMenuTrigger>
                         <NavigationMenuContent>

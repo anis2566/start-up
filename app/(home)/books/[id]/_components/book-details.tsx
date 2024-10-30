@@ -23,9 +23,6 @@ import {
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
 
@@ -33,8 +30,7 @@ import {
 import { cn, savingsPercentage } from "@/lib/utils";
 import { useCart } from "@/hooks/use-cart";
 import { useGetTopReviews } from "../../query";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+
 
 interface BookWithRelations extends Book {
     category: Category;
@@ -44,20 +40,8 @@ interface BookWithRelations extends Book {
 }
 
 export default function BookDetails({ book }: { book: BookWithRelations }) {
-    const router = useRouter();
     const { addToCart } = useCart();
     const { reviews, isFetching, status } = useGetTopReviews({ bookId: book.id });
-
-    const [numPages, setNumPages] = useState<number | null>(null);
-
-    const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-        setNumPages(numPages);
-    };
-
-
-    const handleReadClick = () => {
-        router.push(`/books/${book.id}?open=readBook`);
-    }
 
     const handleAddToCart = (book: BookWithRelations) => {
         addToCart({ book, price: book.discountPrice ?? book.price, quantity: 1 });
@@ -137,18 +121,21 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
             <div className="flex md:hidden">
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button variant="outline" size="lg" className="px-5">
+                        <Button variant="outline" size="lg" className="px-5 w-full">
                             <Eye className="w-4 h-4 mr-2" />
                             <span>একটু পড়ুন</span>
                         </Button>
                     </DialogTrigger>
-                    <DialogContent>
-                        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                            <Viewer
-                                fileUrl="https://utfs.io/f/QakSe81HPnYZqouR1d0JJ6a2ZxiFwzfdjt5LpNuX9sAC0nhW"
-                            // onLoadSuccess={onDocumentLoadSuccess}
-                            />
-                        </Worker>
+                    <DialogContent className="max-w-[800px] h-[80%]">
+                        <div className="h-[100%] w-[100%] overflow-hidden">
+                            <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                                <Viewer
+                                    fileUrl="https://utfs.io/f/aT7im4PMBNXCdOQlUoCbZguaKWepqki5fRJlwyTcmXP49roE"
+                                    defaultScale={1}
+                                    enableSmoothScroll
+                                />
+                            </Worker>
+                        </div>
                     </DialogContent>
                 </Dialog>
             </div>
@@ -171,14 +158,16 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
                             <span>একটু পড়ুন</span>
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-[900px] h-[80%]">
-                        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                            <Viewer
-                                fileUrl="https://utfs.io/f/QakSe81HPnYZqouR1d0JJ6a2ZxiFwzfdjt5LpNuX9sAC0nhW"
-                                defaultScale={1}
-                            // onLoadSuccess={onDocumentLoadSuccess}
-                            />
-                        </Worker>
+                    <DialogContent className="max-w-[800px] h-[80%]">
+                        <div className="h-[100%] w-full overflow-hidden">
+                            <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                                <Viewer
+                                    fileUrl="https://utfs.io/f/aT7im4PMBNXCdOQlUoCbZguaKWepqki5fRJlwyTcmXP49roE"
+                                    defaultScale={1.2}
+                                    enableSmoothScroll
+                                />
+                            </Worker>
+                        </div>
                     </DialogContent>
                 </Dialog>
 

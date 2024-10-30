@@ -2,6 +2,7 @@
 
 import {
   AuthorStatus,
+  BookStatus,
   CategoryStatus,
   PublicationStatus,
 } from "@prisma/client";
@@ -88,6 +89,21 @@ export const GET_RELATED_BOOKS = async (
     },
     orderBy: {
       totalReview: "asc",
+    },
+  });
+  return books;
+};
+
+export const GET_TRENDING_BOOKS = async () => {
+  const books = await db.book.findMany({
+    where: {
+      status: BookStatus.Published,
+    },
+    include: {
+      author: true,
+    },
+    orderBy: {
+      totalReview: "desc",
     },
   });
   return books;

@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 import kyInstance from "@/lib/ky";
-import { ReviewPage } from "@/lib/types";
+import { QuestionPage, ReviewPage } from "@/lib/types";
 import { GET_SIMILAR_CATEGORY_BOOKS, GET_TOP_REVIEWS } from "../action";
 
 export const useGetBookReviews = ({ bookId }: { bookId: string }) => {
@@ -63,6 +63,36 @@ export const useGetSimilarCategoryBooks = ({
 
   return {
     books: data,
+    isFetching,
+    status,
+  };
+};
+
+export const useGetBookQuestions = ({ bookId }: { bookId: string }) => {
+  const { data, fetchNextPage, hasNextPage, isFetching, status } =
+    useInfiniteQuery({
+      queryKey: ["questions", bookId],
+      queryFn: ({ pageParam }) =>
+        kyInstance
+          .get(
+            `/api/questions/${bookId}`,
+            pageParam ? { searchParams: { cursor: pageParam } } : {},
+          )
+          .json<QuestionPage>(),
+      initialPageParam: null as string | null,
+      getNextPageParam: (firstPage) => firstPage.previousCursor,
+      select: (data) => ({
+        pages: [...data.pages].reverse(),
+        pageParams: [...data.pageParams].reverse(),
+      }),
+    });
+
+  const questions = data?.pages.flatMap((page) => page.questions) || [];
+
+  return {
+    questions,
+    fetchNextPage,
+    hasNextPage,
     isFetching,
     status,
   };

@@ -7,6 +7,7 @@ import {
   GET_PUBLICATIONS,
   GET_RELATED_BOOKS,
   GET_SUB_CATEGORIES,
+  GET_TRENDING_BOOKS,
 } from "../action";
 
 export const useGetAuthors = () => {
@@ -61,6 +62,15 @@ export const useGetRelatedBooks = (
   return useQuery({
     queryKey: ["related-books"],
     queryFn: async () => await GET_RELATED_BOOKS(categoryId, subCategoryId),
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+};
+
+export const useGetTrendingBooks = () => {
+  return useQuery({
+    queryKey: ["trending-books"],
+    queryFn: async () => await GET_TRENDING_BOOKS(),
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 60 * 24,
   });

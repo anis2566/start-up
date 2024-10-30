@@ -77,6 +77,8 @@ model User {
   reviews          Review[]
   addresses        Address[]
   orders           Order[]
+  questions        Question[]
+  answers          Answer[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -189,18 +191,6 @@ model Publication {
 }
 
 
-model AdmissionPreparation {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  imageUrl  String
-  description String?
-  status      AdmissionPreparationStatus @default(Pending)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-
 model Book {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
@@ -232,6 +222,7 @@ model Book {
 
   reviews Review[]
   orderItems OrderItem[]
+  questions Question[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -327,3 +318,36 @@ model OrderItem {
   @@index([orderId])
   @@index([bookId])
 }
+
+
+model Question {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  question  String
+
+  userId String   @db.ObjectId
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  bookId String   @db.ObjectId
+  book   Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  answers Answer[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Answer {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  answer    String
+
+  userId String   @db.ObjectId
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  questionId String   @db.ObjectId
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

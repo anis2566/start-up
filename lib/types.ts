@@ -34,3 +34,21 @@ export interface ReviewPage {
   reviews: ReviewData[];
   previousCursor: string | null;
 }
+
+export function getQuestionDataInclude() {
+  return {
+    user: true,
+    answers: {
+      include: { user: true },
+    },
+  } satisfies Prisma.QuestionInclude;
+}
+
+export type QuestionData = Prisma.QuestionGetPayload<{
+  include: ReturnType<typeof getQuestionDataInclude>;
+}>;
+
+export interface QuestionPage {
+  questions: QuestionData[];
+  previousCursor: string | null;
+}

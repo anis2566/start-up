@@ -6,6 +6,7 @@ import { db } from "@/lib/prisma";
 import { ReviewSchema, ReviewSchemaType } from "@/schema/review.schema";
 import { GET_USER } from "@/services/user.service";
 import { getReviewDataInclude } from "@/lib/types";
+import { QuestionSchema, QuestionSchemaType } from "@/schema/question.schema";
 
 type CreateReview = {
   bookId: string;
@@ -91,6 +92,9 @@ export const CREATE_REVIEW_ACTION = async ({
       },
       data: {
         rating: newRating,
+        totalReview: {
+          increment: 1,
+        },
       },
     });
 
@@ -122,7 +126,6 @@ export const GET_TOP_REVIEWS = async (id: string) => {
   return reviews;
 };
 
-
 export const GET_SIMILAR_CATEGORY_BOOKS = async (categoryId: string) => {
   const books = await db.book.findMany({
     where: {
@@ -138,4 +141,42 @@ export const GET_SIMILAR_CATEGORY_BOOKS = async (categoryId: string) => {
   });
 
   return books;
+};
+
+export const CREATE_QUESTION_ACTION = async (values: QuestionSchemaType) => {
+  const { data, success } = QuestionSchema.safeParse(values);
+
+  if (!success) {
+    return {
+      error: "Invalid input values",
+    };
+  }
+
+  try {
+    const { userId } = await GET_USER();
+
+    const question = await db.question.create({
+      data: {
+        ...data,
+        userId: userId,
+      },
+      include: {
+        user: true,
+        answers: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    return {
+      success: "Question submitted",
+      question,
+    };
+  } catch (error) {
+    return {
+      error: "Failed to create question",
+    };
+  }
 };

@@ -24,7 +24,7 @@ export const SimilarCategoryBooks = ({ categoryId }: { categoryId: string }) => 
     const { addToCart } = useCart();
 
     return (
-        <div className="pb-10">
+        <div className="space-y-4">
             <h1 className="text-xl font-semibold text-gray-700 dark:text-accent-foreground">Similar Category Books</h1>
 
             <Carousel

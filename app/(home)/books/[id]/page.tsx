@@ -13,6 +13,7 @@ import { Author } from "./_components/author";
 import { Reviews } from "./_components/reveiws";
 import { DeliveryBanner } from "@/components/delivery-banner";
 import { SimilarCategoryBooks } from "./_components/similar-category-books";
+import { QuestionAnswer } from "./_components/question-answer";
 
 
 interface Props {
@@ -82,6 +83,8 @@ const Book = async ({ params }: Props) => {
             </Tabs>
 
             <SimilarCategoryBooks categoryId={book.categoryId} />
+
+            <QuestionAnswer bookId={book.id} />
         </div>
     )
 }
