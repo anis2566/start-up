@@ -41,7 +41,7 @@ export const QuestionModal = () => {
         },
     });
 
-    const { mutate: createQuestion, isPending } = useCreateQuestionMutation({ onClose, form, bookId: id || "" });
+    const { mutate: createQuestion, isPending } = useCreateQuestionMutation({ onClose, form });
 
     const onSubmit = (values: QuestionSchemaType) => {
         createQuestion(values);

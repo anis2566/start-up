@@ -105,6 +105,42 @@ export const GET_TRENDING_BOOKS = async () => {
     orderBy: {
       totalReview: "desc",
     },
+    take: 12,
+  });
+  return books;
+};
+
+export const GET_FOR_YOU = async () => {
+  const books = await db.book.findMany({
+    where: {
+      status: BookStatus.Published,
+    },
+    include: {
+      author: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 12,
+  });
+  return books;
+};
+
+export const GET_DISCOUNT_BOOKS = async () => {
+  const books = await db.book.findMany({
+    where: {
+      status: BookStatus.Published,
+      discountPrice: {
+        not: null,
+      },
+    },
+    include: {
+      author: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 12,
   });
   return books;
 };

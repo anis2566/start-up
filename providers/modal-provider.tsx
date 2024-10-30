@@ -19,7 +19,7 @@ export const ModalProvider = () => {
             <OrderStatusModal />
             <ReviewModal />
             <DeleteReviewModal />
-            <QuestionModal />
+            {/* <QuestionModal /> */}
         </>
     );
 };

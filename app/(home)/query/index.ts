@@ -4,6 +4,8 @@ import {
   GET_AUTHORS,
   GET_CATEGORIES,
   GET_CATEGORIES_HOME,
+  GET_DISCOUNT_BOOKS,
+  GET_FOR_YOU,
   GET_PUBLICATIONS,
   GET_RELATED_BOOKS,
   GET_SUB_CATEGORIES,
@@ -71,6 +73,24 @@ export const useGetTrendingBooks = () => {
   return useQuery({
     queryKey: ["trending-books"],
     queryFn: async () => await GET_TRENDING_BOOKS(),
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+};
+
+export const useGetForYou = () => {
+  return useQuery({
+    queryKey: ["for-you"],
+    queryFn: async () => await GET_FOR_YOU(),
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+};
+
+export const useGetDiscountBooks = () => {
+  return useQuery({
+    queryKey: ["discount-books"],
+    queryFn: async () => await GET_DISCOUNT_BOOKS(),
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 60 * 24,
   });
