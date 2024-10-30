@@ -3,6 +3,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -18,7 +20,14 @@ export const QuestionModal = () => {
     const open = searchParams.get("open") === "askQuestion";
     const id = searchParams.get("id");
 
-    if (!id) return null;
+    useEffect(() => {
+        if (open) {
+            form.reset({
+                question: "",
+                bookId: id || "",
+            });
+        }
+    }, [open]);
 
     const onClose = () => {
         router.push(`/books/${id}`);
@@ -28,7 +37,7 @@ export const QuestionModal = () => {
         resolver: zodResolver(QuestionSchema),
         defaultValues: {
             question: "",
-            bookId: id,
+            bookId: id || "",
         },
     });
 
