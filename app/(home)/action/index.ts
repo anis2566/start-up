@@ -144,3 +144,30 @@ export const GET_DISCOUNT_BOOKS = async () => {
   });
   return books;
 };
+
+export const GET_RECENTLY_ADDED = async () => {
+  const books = await db.book.findMany({
+    where: {
+      status: BookStatus.Published,
+    },
+    include: {
+      author: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 12,
+  });
+  return books;
+};
+
+export const GET_FEATURE_CATEGORY = async () => {
+  const categories = await db.category.findMany({
+    where: {
+      status: CategoryStatus.Active,
+      isFeatured: true,
+    },
+    take: 6
+  });
+  return categories;
+};

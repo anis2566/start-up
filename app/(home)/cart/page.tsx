@@ -56,7 +56,7 @@ const Cart = () => {
                             Total ৳{cart.reduce((acc, item) => acc + (item.quantity * item.price), 0)}
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="space-y-4">
                         {cart.map((item) => (
                             <div key={item.book.id} className="flex justify-between">
                                 <div className="flex gap-x-3">
@@ -150,7 +150,7 @@ const Cart = () => {
                         </div>
                         <div className="flex justify-between border-b p-2">
                             <p>Total</p>
-                            <p>৳{cart.reduce((acc, item) => acc + (item.quantity * item.price), 100)}</p>
+                            <p>৳{cart.reduce((acc, item) => acc + (item.quantity * item.price), 100).toFixed(2)}</p>
                         </div>
                         {
                             session && session.userId ? (

@@ -45,7 +45,7 @@ export default function RelatedBooks({ categoryId, subCategoryId }: Props) {
                 className="block md:hidden w-full max-w-xs"
             >
                 <CarouselContent className="h-auto md:h-[400px]">
-                    {relatedBooks?.map((book) => (
+                    {relatedBooks?.slice(0, 3).map((book) => (
                         <CarouselItem key={book.id}>
                             <Link key={book.id} href={`/books/${book.id}`} className="flex gap-x-3 hover:shadow-md">
                                 <Image src={book.imageUrl} alt={book.name} width={80} height={80} />

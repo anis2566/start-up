@@ -55,8 +55,14 @@ export const useCreateReviewMutation = ({ onClose, form, bookId }: Props) => {
           return !query.state.data;
         },
       });
-      toast.success(data.success);
-      onClose();
+      if (data.success) {
+        toast.success(data.success);
+        onClose();
+      }
+
+      if (data.error) {
+        toast.error(data.error);
+      }
     },
     onSettled: () => {
       form.reset();

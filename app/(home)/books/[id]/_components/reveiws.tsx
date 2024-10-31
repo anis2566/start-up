@@ -1,7 +1,6 @@
 "use client";
 
 import { Rating } from "@smastrom/react-rating";
-import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import ReactTimeAgo from "react-time-ago";
 import TimeAgo from "javascript-time-ago";
@@ -12,6 +11,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 import { useGetBookReviews } from "../../query";
+import { useReview } from "@/hooks/use-review";
 
 TimeAgo.addDefaultLocale(en);
 
@@ -23,7 +23,8 @@ interface ReviewsProps {
 
 export const Reviews = ({ bookId, rating, reviewsCount }: ReviewsProps) => {
     const { reviews, fetchNextPage, hasNextPage, isFetching, status } = useGetBookReviews({ bookId })
-
+    const { onOpen } = useReview();
+    
     return (
         <Card>
             <CardHeader>
@@ -32,8 +33,8 @@ export const Reviews = ({ bookId, rating, reviewsCount }: ReviewsProps) => {
                         <p className="text-xl font-bold">({rating})</p>
                         <Rating style={{ maxWidth: 70 }} value={rating} readOnly />
                     </div>
-                    <Button variant="outline" asChild>
-                        <Link href={`/books/${bookId}?open=review&id=${bookId}`}>Add Review</Link>
+                    <Button variant="outline" onClick={() => onOpen(bookId)}>
+                        Add Review
                     </Button>
                 </CardTitle>
                 <CardDescription>({reviewsCount} reviews)</CardDescription>

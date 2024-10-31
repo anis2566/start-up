@@ -4,7 +4,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Rating } from "@smastrom/react-rating";
-import { useRouter, useSearchParams } from "next/navigation";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -13,17 +12,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { ReviewSchema } from "@/schema/review.schema";
 import { LoadingButton } from "@/components/loading-button";
 import { useCreateReviewMutation } from "../../mutation";
+import { useReview } from "@/hooks/use-review";
 
 
 export const ReviewModal = () => {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const id = searchParams.get("id");
-    const open = searchParams.get("open") === "review";
-
-    const onClose = () => {
-        router.push(`/books/${id}`);
-    };
+    const { open, id, onClose } = useReview();
 
     const form = useForm<z.infer<typeof ReviewSchema>>({
         resolver: zodResolver(ReviewSchema),
@@ -33,7 +26,7 @@ export const ReviewModal = () => {
         },
     });
 
-    const { mutate, isPending } = useCreateReviewMutation({ onClose, form, bookId: id || "" });
+    const { mutate, isPending } = useCreateReviewMutation({ onClose, form, bookId: id });
 
     const onSubmit = async (values: z.infer<typeof ReviewSchema>) => {
         if (!id) return;

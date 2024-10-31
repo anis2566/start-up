@@ -288,7 +288,7 @@ export const CheckoutForm = () => {
                             </div>
                             <div className="flex justify-between p-2">
                                 <p>Total</p>
-                                <p>৳{totalPrice + form.watch("shippingCharge")}</p>
+                                <p>৳{ (totalPrice + form.watch("shippingCharge")).toFixed(2) }</p>
                             </div>
                             <div className="flex items-center gap-x-2 mt-4">
                                 <Input type="text" placeholder="Enter your coupon code" disabled={isPending} />
@@ -298,7 +298,7 @@ export const CheckoutForm = () => {
                     </Card>
                     <LoadingButton
                         isLoading={isPending}
-                        title={`Confirm Order ৳${totalPrice + form.watch("shippingCharge")}`}
+                        title={`Confirm Order ৳${ (totalPrice + form.watch("shippingCharge")).toFixed(2) }`}
                         loadingTitle="Processing..."
                         onClick={() => { }}
                         type="submit"

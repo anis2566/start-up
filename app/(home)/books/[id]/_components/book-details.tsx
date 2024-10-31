@@ -170,20 +170,6 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
                         </div>
                     </DialogContent>
                 </Dialog>
-
-                {/* <TooltipProvider delayDuration={0}>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button variant="outline" size="lg" className="px-5" onClick={handleReadClick}>
-                                <Eye className="w-4 h-4 mr-2" />
-                                <span>একটু পড়ুন</span>
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>View book</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider> */}
                 <TooltipProvider delayDuration={0}>
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -199,7 +185,7 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
                 </TooltipProvider>
             </div>
 
-            <div className={cn("flex md:hidden flex-col fixed bottom-0 left-0 right-0 z-50 px-3", reviews?.length === 0 && "hidden")}>
+            <div className={cn("flex md:hidden flex-col fixed bottom-0 left-0 right-0 z-50 px-3")}>
                 <Carousel
                     opts={{
                         align: "start",
@@ -212,7 +198,7 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
                         }),
                     ]}
                     orientation="vertical"
-                    className="w-full bg-background"
+                    className={cn("w-full bg-background", reviews?.length === 0 && "hidden")}
                 >
                     <CarouselContent className="h-[80px]">
                         {

@@ -2,12 +2,7 @@ import { Prisma } from "@prisma/client";
 
 export function getBookDataInclude() {
   return {
-    category: true,
-    reviews: {
-      select: {
-        userId: true,
-      },
-    },
+    author: true,
   } satisfies Prisma.BookInclude;
 }
 
@@ -18,6 +13,7 @@ export type BookData = Prisma.BookGetPayload<{
 export interface BookPage {
   books: BookData[];
   nextCursor: string | null;
+  total: number;
 }
 
 export function getReviewDataInclude() {

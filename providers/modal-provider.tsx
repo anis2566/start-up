@@ -7,6 +7,7 @@ import { OrderStatusModal } from "@/app/dashboard/orders/_components/status-moda
 import { ReviewModal } from "@/app/(home)/books/[id]/_components/review.modal";
 import { DeleteReviewModal } from "@/app/dashboard/reviews/_components/delete-modal";
 import { QuestionModal } from "@/app/(home)/books/[id]/_components/question-modal";
+import { CartModal } from "@/app/(home)/cart/_components/cart-modal";
 
 export const ModalProvider = () => {
     return (
@@ -20,6 +21,7 @@ export const ModalProvider = () => {
             <ReviewModal />
             <DeleteReviewModal />
             <QuestionModal />
+            <CartModal />
         </>
     );
 };

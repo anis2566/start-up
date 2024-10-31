@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 import kyInstance from "@/lib/ky";
-import { QuestionPage, ReviewPage } from "@/lib/types";
+import { BookPage, QuestionPage, ReviewPage } from "@/lib/types";
 import { GET_SIMILAR_CATEGORY_BOOKS, GET_TOP_REVIEWS } from "../action";
 
 export const useGetBookReviews = ({ bookId }: { bookId: string }) => {
@@ -95,5 +95,43 @@ export const useGetBookQuestions = ({ bookId }: { bookId: string }) => {
     hasNextPage,
     isFetching,
     status,
+  };
+};
+
+export const useGetBooks = ({ author }: { author: string | null }) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: ["get-books-for-browse", author],
+    queryFn: ({ pageParam }) =>
+      kyInstance
+        .get("/api/books", {
+          // searchParams: {
+          //   ...(pageParam && { cursor: pageParam }),
+          //   ...(author && { author }),
+          // },
+        })
+        .json<BookPage>(),
+    initialPageParam: null as string | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    refetchOnWindowFocus: false,
+  });
+
+  const books = data?.pages.flatMap((page) => page.books) || [];
+  const total = data?.pages[0].total || 0;
+
+  return {
+    books,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+    total,
   };
 };

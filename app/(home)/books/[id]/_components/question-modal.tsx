@@ -1,10 +1,8 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -13,35 +11,29 @@ import { Textarea } from "@/components/ui/textarea";
 import { LoadingButton } from "@/components/loading-button";
 import { QuestionSchema, QuestionSchemaType } from "@/schema/question.schema";
 import { useCreateQuestionMutation } from "../../mutation";
+import { useQuestion } from "@/hooks/use-question";
 
 export const QuestionModal = () => {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const open = searchParams.get("open") === "askQuestion";
-    const id = searchParams.get("id");
+    const { open, id, onClose } = useQuestion();
 
     useEffect(() => {
         if (open) {
             form.reset({
                 question: "",
-                bookId: id || "",
+                bookId: id,
             });
         }
     }, [open]);
-
-    const onClose = () => {
-        router.push(`/books/${id}`);
-    }
 
     const form = useForm<QuestionSchemaType>({
         resolver: zodResolver(QuestionSchema),
         defaultValues: {
             question: "",
-            bookId: id || "",
+            bookId: id,
         },
     });
 
-    const { mutate: createQuestion, isPending } = useCreateQuestionMutation({ onClose, form, bookId: id || "" });
+    const { mutate: createQuestion, isPending } = useCreateQuestionMutation({ onClose, form, bookId: id });
 
     const onSubmit = (values: QuestionSchemaType) => {
         createQuestion(values);

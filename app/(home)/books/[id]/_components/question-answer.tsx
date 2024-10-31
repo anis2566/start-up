@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import ReactTimeAgo from "react-time-ago";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
@@ -11,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { useGetBookQuestions } from "../../query";
+import { useQuestion } from "@/hooks/use-question";
 
 TimeAgo.addDefaultLocale(en);
 
@@ -20,6 +20,7 @@ interface Props {
 
 export const QuestionAnswer = ({ bookId }: Props) => {
     const { questions, isFetching, status, fetchNextPage, hasNextPage } = useGetBookQuestions({ bookId });
+    const { onOpen } = useQuestion();
 
     return (
         <div className="pb-[200px] md:pb-0">
@@ -27,8 +28,8 @@ export const QuestionAnswer = ({ bookId }: Props) => {
                 <CardHeader>
                     <CardTitle className="flex justify-between items-center">
                         <p className="text-xl font-bold">Question & Answer</p>
-                        <Button variant="outline" asChild>
-                            <Link href={`/books/${bookId}?open=askQuestion&id=${bookId}`}>Ask Question</Link>
+                        <Button variant="outline" onClick={() => onOpen(bookId)}>
+                            Ask Question
                         </Button>
                     </CardTitle>
                     <CardDescription>Ask a question about this book</CardDescription>

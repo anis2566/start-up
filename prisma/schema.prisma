@@ -151,6 +151,7 @@ model Category {
   imageUrl  String
   description String?
   status      CategoryStatus @default(Active)
+  isFeatured Boolean @default(false)
 
   subCategories SubCategory[]
   books Book[]

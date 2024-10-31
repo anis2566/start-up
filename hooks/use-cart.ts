@@ -82,3 +82,15 @@ export const useCart = create<CartState>()(
     },
   ),
 );
+
+interface OpenCartModalState {
+  open: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+}
+
+export const useOpenCartModal = create<OpenCartModalState>()((set) => ({
+  open: false,
+  onOpen: () => set({ open: true }),
+  onClose: () => set({ open: false }),
+}));

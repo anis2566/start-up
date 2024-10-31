@@ -5,8 +5,10 @@ import {
   GET_CATEGORIES,
   GET_CATEGORIES_HOME,
   GET_DISCOUNT_BOOKS,
+  GET_FEATURE_CATEGORY,
   GET_FOR_YOU,
   GET_PUBLICATIONS,
+  GET_RECENTLY_ADDED,
   GET_RELATED_BOOKS,
   GET_SUB_CATEGORIES,
   GET_TRENDING_BOOKS,
@@ -91,6 +93,24 @@ export const useGetDiscountBooks = () => {
   return useQuery({
     queryKey: ["discount-books"],
     queryFn: async () => await GET_DISCOUNT_BOOKS(),
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+};
+
+export const useGetRecentlyAdded = () => {
+  return useQuery({
+    queryKey: ["recently-added"],
+    queryFn: async () => await GET_RECENTLY_ADDED(),
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+};
+
+export const useGetFeatureCategory = () => {
+  return useQuery({
+    queryKey: ["feature-category"],
+    queryFn: async () => await GET_FEATURE_CATEGORY(),
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 60 * 24,
   });
