@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import queryString from "query-string";
 import { useState } from "react";
 
@@ -23,7 +23,6 @@ export function Search({ className }: Props) {
     const [search, setSearch] = useState<string>("");
 
     const router = useRouter();
-    const pathname = usePathname();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
@@ -33,7 +32,7 @@ export function Search({ className }: Props) {
 
         const url = queryString.stringifyUrl(
             {
-                url: pathname,
+                url: "/books",
                 query: {
                     query: search,
                 },

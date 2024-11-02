@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 export function getBookDataInclude() {
   return {
     author: true,
+    publication: true,
   } satisfies Prisma.BookInclude;
 }
 
@@ -47,4 +48,11 @@ export type QuestionData = Prisma.QuestionGetPayload<{
 export interface QuestionPage {
   questions: QuestionData[];
   previousCursor: string | null;
+}
+
+export type CategoryData = Prisma.CategoryGetPayload<{}>;
+
+export interface CategoryPage {
+  categories: CategoryData[];
+  nextCursor: string | null;
 }

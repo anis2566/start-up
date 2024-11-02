@@ -19,7 +19,7 @@ export const Publications = () => {
             <div className="grid gap-3 p-4 grid-cols-4">
                 {
                     data?.map((publication) => (
-                        <Link href={`/publications/${publication.id}`} className="flex items-center gap-x-2 hover:text-muted-foreground transition-colors" key={publication.name}>
+                        <Link href={`/books?publication=${publication.id}`} className="flex items-center gap-x-2 hover:text-muted-foreground transition-colors" key={publication.name}>
                             <Image src={publication.imageUrl} alt={publication.name} width={20} height={20} className="rounded-full" />
                             <p className="truncate">{publication.name}</p>
                         </Link>

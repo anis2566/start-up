@@ -63,6 +63,20 @@ enum PaymentStatus {
   Failed
 }
 
+enum Language {
+  Bangla
+  English
+  Arabic
+  Hindi
+  Urdu
+  French
+  German
+  Spanish
+  Portuguese
+  Italian
+  Dutch
+}
+
 model User {
   id               String           @id @default(auto()) @map("_id") @db.ObjectId
   name             String?
@@ -195,12 +209,14 @@ model Publication {
 model Book {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
+  nameBangla String?
   imageUrl  String
   shortDescription String?
   description String
   status      BookStatus @default(Unpublished)
   price       Float
   discountPrice Float?
+  discountPercent Float?
   length        Int
   edition       String
   isbn          Int?
@@ -208,6 +224,8 @@ model Book {
   totalReview   Int @default(0)
   totalSold     Int @default(0)
   stock         Int @default(0)
+  demoPdfUrl    String?
+  language      Language @default(Bangla)
 
   authorId String   @db.ObjectId
   author   Author @relation(fields: [authorId], references: [id], onDelete: Cascade)

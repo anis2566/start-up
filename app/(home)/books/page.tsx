@@ -1,8 +1,9 @@
+import { db } from "@/lib/prisma";
 import { BookPage } from "./_components/book-page"
-import { transliterate as tr, slugify } from 'transliteration';
+import { BookStatus } from "@prisma/client";
+import { savingsPercentage } from "@/lib/utils";
 
-const Books = () => {
-    console.log(tr("আসমান"));
+const Books = async () => {
     return (
         <div className="px-3 md:px-0 mt-4 pb-6">
             <BookPage />

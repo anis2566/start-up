@@ -1,8 +1,9 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 import kyInstance from "@/lib/ky";
-import { BookPage, QuestionPage, ReviewPage } from "@/lib/types";
+import { BookPage, CategoryPage, QuestionPage, ReviewPage } from "@/lib/types";
 import { GET_SIMILAR_CATEGORY_BOOKS, GET_TOP_REVIEWS } from "../action";
+import { Language } from "@prisma/client";
 
 export const useGetBookReviews = ({ bookId }: { bookId: string }) => {
   const { data, fetchNextPage, hasNextPage, isFetching, status } =
@@ -98,7 +99,37 @@ export const useGetBookQuestions = ({ bookId }: { bookId: string }) => {
   };
 };
 
-export const useGetBooks = ({ author }: { author: string | null }) => {
+interface GetBooksProps {
+  author: string | null;
+  category: string | null;
+  publication: string | null;
+  subcategory: string | null;
+  discount: boolean | false;
+  query: string | null;
+  sort: string | null;
+  minPrice: string | null;
+  maxPrice: string | null;
+  minDiscount: string | null;
+  maxDiscount: string | null;
+  language: Language | null;
+  inStock: string | null;
+}
+
+export const useGetBooks = ({
+  author,
+  category,
+  subcategory,
+  publication,
+  discount,
+  query,
+  sort,
+  minPrice,
+  maxPrice,
+  minDiscount,
+  maxDiscount,
+  language,
+  inStock,
+}: GetBooksProps) => {
   const {
     data,
     fetchNextPage,
@@ -107,14 +138,41 @@ export const useGetBooks = ({ author }: { author: string | null }) => {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ["get-books-for-browse", author],
+    queryKey: [
+      "get-books-for-browse",
+      author,
+      category,
+      subcategory,
+      publication,
+      discount,
+      query,
+      sort,
+      minPrice,
+      maxPrice,
+      minDiscount,
+      maxDiscount,
+      language,
+      inStock,
+    ],
     queryFn: ({ pageParam }) =>
       kyInstance
         .get("/api/books", {
-          // searchParams: {
-          //   ...(pageParam && { cursor: pageParam }),
-          //   ...(author && { author }),
-          // },
+          searchParams: {
+            ...(pageParam && { cursor: pageParam }),
+            ...(author && { author }),
+            ...(category && { category }),
+            ...(subcategory && { subcategory }),
+            ...(publication && { publication }),
+            ...(discount && { discount: "true" }),
+            ...(query && { query }),
+            ...(sort && { sort }),
+            ...(minPrice && { minPrice }),
+            ...(maxPrice && { maxPrice }),
+            ...(minDiscount && { minDiscount }),
+            ...(maxDiscount && { maxDiscount }),
+            ...(language && { language }),
+            ...(inStock && { inStock }),
+          },
         })
         .json<BookPage>(),
     initialPageParam: null as string | null,
@@ -123,7 +181,6 @@ export const useGetBooks = ({ author }: { author: string | null }) => {
   });
 
   const books = data?.pages.flatMap((page) => page.books) || [];
-  const total = data?.pages[0].total || 0;
 
   return {
     books,
@@ -132,6 +189,42 @@ export const useGetBooks = ({ author }: { author: string | null }) => {
     isFetching,
     isFetchingNextPage,
     status,
-    total,
+    total: data?.pages[0].total || 0,
+  };
+};
+
+export const useGetCategories = () => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: ["get-categories-for-filter"],
+    queryFn: ({ pageParam }) =>
+      kyInstance
+        .get("/api/categories", {
+          searchParams: {
+            ...(pageParam && { cursor: pageParam }),
+          },
+        })
+        .json<CategoryPage>(),
+    initialPageParam: null as string | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
+
+  const categories = data?.pages.flatMap((page) => page.categories) || [];
+
+  return {
+    categories,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
   };
 };

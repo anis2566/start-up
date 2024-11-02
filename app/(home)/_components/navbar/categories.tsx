@@ -19,7 +19,7 @@ export const Categories = () => {
             <div className="grid gap-3 p-4 grid-cols-4">
                 {
                     data?.map((category) => (
-                        <Link href={`/categories/${category.id}`} className="flex items-center gap-x-2 hover:text-muted-foreground transition-colors" key={category.name}>
+                        <Link href={`/books?category=${category.id}`} className="flex items-center gap-x-2 hover:text-muted-foreground transition-colors" key={category.name}>
                             <Image src={category.imageUrl} alt={category.name} width={20} height={20} className="rounded-full" />
                             <p className="truncate">{category.name}</p>
                         </Link>

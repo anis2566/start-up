@@ -141,7 +141,6 @@ export function PlaceholdersAndVanishInput({
                 if (newDataRef.current.length > 0) {
                     animateFrame(pos - 8);
                 } else {
-                    setValue("");
                     setAnimating(false);
                 }
             });
