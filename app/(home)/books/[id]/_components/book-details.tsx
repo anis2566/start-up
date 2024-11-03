@@ -2,14 +2,13 @@
 
 import { Author, Book, Category, SubCategory, Publication } from "@prisma/client";
 import Link from "next/link";
-import { Layers3, UserRoundPen, Eye, ShoppingCart, Files, BookOpen, FilePenLine, CornerDownLeft, Loader2 } from "lucide-react";
+import { Layers3, UserRoundPen, Eye, ShoppingCart, Files, BookOpen, FilePenLine, CornerDownLeft, Loader2, Heart, Share2 } from "lucide-react";
 import { Rating } from "@smastrom/react-rating";
 import { toast } from "sonner";
 import Image from "next/image";
 import Autoplay from "embla-carousel-autoplay"
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
-
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,6 +29,7 @@ import {
 import { cn, savingsPercentage } from "@/lib/utils";
 import { useCart } from "@/hooks/use-cart";
 import { useGetTopReviews } from "../../query";
+import { useWishlist } from "@/hooks/use-wishlist";
 
 
 interface BookWithRelations extends Book {
@@ -41,11 +41,17 @@ interface BookWithRelations extends Book {
 
 export default function BookDetails({ book }: { book: BookWithRelations }) {
     const { addToCart } = useCart();
-    const { reviews, isFetching, status } = useGetTopReviews({ bookId: book.id });
+    const { addToWishlist } = useWishlist();
+    const { reviews, isFetching } = useGetTopReviews({ bookId: book.id });
 
     const handleAddToCart = (book: BookWithRelations) => {
         addToCart({ book, price: book.discountPrice ?? book.price, quantity: 1 });
         toast.success("Added to cart");
+    }
+
+    const handleAddToWishlist = () => {
+        addToWishlist(book);
+        toast.success("Added to wishlist");
     }
 
     return (
@@ -183,6 +189,17 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
+            </div>
+
+            <div className="flex items-center gap-x-2">
+                <Button variant="secondary" onClick={handleAddToWishlist} className="flex items-center gap-x-2">
+                    <Heart className="w-4 h-4" />
+                    <span className="hidden md:block">Add to Wishlist</span>
+                </Button>
+                <Button variant="secondary" className="flex items-center gap-x-2">
+                    <Share2 className="w-4 h-4" />
+                    <span className="hidden md:block">Share</span>
+                </Button>
             </div>
 
             <div className={cn("flex md:hidden flex-col fixed bottom-0 left-0 right-0 z-50 px-3")}>

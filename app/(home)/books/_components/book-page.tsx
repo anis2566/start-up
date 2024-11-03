@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { FilterIcon, Loader2, SortAscIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
 import { BookCard, BookCardSkeleton } from "@/components/book-card";
@@ -8,8 +8,9 @@ import InfiniteScrollContainer from "@/components/infinite-scroll-container";
 import { useGetBooks } from "../query";
 import { Filter } from "./filter";
 import { Language } from "@prisma/client";
-import { useFilters } from "@/hooks/use-filters";
-import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { FilterDrawer } from "./filter-drawer";
+import { SortDrawer } from "./sort-drawer";
 
 export const BookPage = () => {
     const searchParams = useSearchParams();
@@ -29,15 +30,11 @@ export const BookPage = () => {
 
     const { books, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status, total } = useGetBooks({ author, category, subcategory, publication, discount, query, sort, minPrice, maxPrice, language: language as Language | null, inStock, minDiscount, maxDiscount });
 
-    const authors = books.map((book) => book.author)
-    const publications = books.map((book) => book.publication)
-    const languages = books.map((book) => book.language)
-    
     return (
-        <div className="px-0 mt-4">
-            <div className="flex gap-x-3 relative">
+        <div className="px-0 mt-4 relative">
+            <div className="flex gap-x-3 ">
                 <div className="hidden md:flex flex-col w-72 flex-shrink-0 border-r border-gray-200 absolute top-0 left-0 h-full">
-                    <Filter authors={authors} publications={publications} languages={languages} />
+                    <Filter />
                 </div>
                 <div className="md:ml-72 md:pl-4 space-y-4 w-full">
                     <div className="text-md text-gray-500">{total} books found</div>
@@ -69,6 +66,26 @@ export const BookPage = () => {
                             )}
                         </InfiniteScrollContainer>
                     )}
+                </div>
+            </div>
+            <div className="md:hidden fixed bottom-0 left-0 w-full h-16 bg-background border-t border-gray-200">
+                <div className="flex items-center justify-between h-full px-4">
+                    <FilterDrawer>
+                        <Button variant="outline" className="flex items-center gap-x-2">
+                            <FilterIcon className="w-4 h-4" />
+                            Filter
+                        </Button>
+                    </FilterDrawer>
+
+                    <div className="flex items-center gap-x-2">
+                        <p className="text-sm text-gray-500">Sort By</p>
+                        <SortDrawer>
+                            <Button variant="outline" className="flex items-center gap-x-2">
+                                <SortAscIcon className="w-4 h-4" />
+                                Sort
+                            </Button>
+                        </SortDrawer>
+                    </div>
                 </div>
             </div>
         </div >

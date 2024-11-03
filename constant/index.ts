@@ -1,3 +1,14 @@
+import {
+  LucideIcon,
+  User,
+  ShoppingBag,
+  BookOpen,
+  FilePenLine,
+  MessageCircle,
+  Sparkles,
+  Gift,
+} from "lucide-react";
+
 export const EDITIONS: string[] = [
   "1st",
   "2nd",
@@ -29,4 +40,43 @@ export const EDITIONS: string[] = [
   "28th",
   "29th",
   "30th",
+];
+
+type UserSidebarNavs = {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+};
+
+export const userSidebarNavs: UserSidebarNavs[] = [
+  {
+    label: "Profile",
+    href: "/user/profile",
+    icon: User,
+  },
+  {
+    label: "Orders",
+    href: "/user/orders",
+    icon: ShoppingBag,
+  },
+  {
+    label: "Bookshelf",
+    href: "/user/bookshelf",
+    icon: BookOpen,
+  },
+  {
+    label: "Reviews",
+    href: "/user/reviews",
+    icon: FilePenLine,
+  },
+  {
+    label: "Questions",
+    href: "/user/questions",
+    icon: MessageCircle,
+  },
+  {
+    label: "Points",
+    href: "/user/points",
+    icon: Sparkles,
+  },
 ];

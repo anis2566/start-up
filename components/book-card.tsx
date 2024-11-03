@@ -15,6 +15,7 @@ import { Badge } from "./ui/badge";
 
 import { cn, savingsPercentage } from "@/lib/utils";
 import { useCart, useOpenCartModal } from "@/hooks/use-cart";
+import { useWishlist } from "@/hooks/use-wishlist";
 
 
 interface BookWithRelations extends Book {
@@ -27,12 +28,19 @@ interface Props {
 
 export const BookCard = ({ book }: Props) => {
     const { addToCart } = useCart();
+    const { addToWishlist } = useWishlist();
+
     const { onOpen } = useOpenCartModal();
 
     const handleAddToCart = () => {
         addToCart({ book, price: book.discountPrice ?? book.price, quantity: 1 });
         toast.success("Added to cart");
         onOpen();
+    }
+
+    const handleAddToWishlist = () => {
+        addToWishlist(book);
+        toast.success("Added to wishlist");
     }
 
     return (
@@ -90,7 +98,7 @@ export const BookCard = ({ book }: Props) => {
                 <TooltipProvider delayDuration={0}>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button variant="outline" size="icon">
+                            <Button variant="outline" size="icon" onClick={handleAddToWishlist}>
                                 <Heart className="w-4 h-4" />
                             </Button>
                         </TooltipTrigger>

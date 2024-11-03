@@ -63,6 +63,12 @@ enum PaymentStatus {
   Failed
 }
 
+enum Gender {
+  Male
+  Female
+  Other
+}
+
 enum Language {
   Bangla
   English
@@ -84,6 +90,9 @@ model User {
   password         String?
   emailVerified    DateTime?
   image            String?
+  phone            String?
+  gender           Gender?
+  dob              DateTime?
   accounts         Account[]
   role             Role             @default(User)
 
