@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image";
+import Link from "next/link";
 
 import {
     Carousel,
@@ -9,9 +10,9 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { useGetFeatureCategory } from "../../query";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export const FeatureCategory = () => {
     const { data: featureCategory, isLoading } = useGetFeatureCategory();
@@ -37,12 +38,12 @@ export const FeatureCategory = () => {
                             ) : (
                                 featureCategory?.map((category) => (
                                     <CarouselItem key={category.id} className="basis-1/2 md:basis-1/6">
-                                        <div className="space-y-2 border p-2 rounded-lg group">
+                                        <Link href={`/books?category=${category.id}`} className="block space-y-2 border p-2 rounded-lg group">
                                             <div className="relative aspect-square max-h-20 mx-auto">
                                                 <Image src={category.imageUrl} alt={category.name} fill className="object-cover rounded-full mx-auto" />
                                             </div>
                                             <p className="text-sm font-medium text-gray-600 text-center group-hover:text-primary">{category.name}</p>
-                                        </div>
+                                        </Link>
                                     </CarouselItem>
                                 ))
                             )

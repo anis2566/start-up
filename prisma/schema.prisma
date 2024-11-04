@@ -83,6 +83,12 @@ enum Language {
   Dutch
 }
 
+enum SellerStatus {
+  Pending
+  Active
+  Inactive
+}
+
 model User {
   id               String           @id @default(auto()) @map("_id") @db.ObjectId
   name             String?
@@ -102,6 +108,7 @@ model User {
   orders           Order[]
   questions        Question[]
   answers          Answer[]
+  seller           Seller?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -248,6 +255,9 @@ model Book {
   publicationId String   @db.ObjectId
   publication   Publication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
 
+  sellerId String?   @db.ObjectId
+  seller   Seller? @relation(fields: [sellerId], references: [id])
+
   reviews Review[]
   orderItems OrderItem[]
   questions Question[]
@@ -379,3 +389,22 @@ model Answer {
   updatedAt DateTime @updatedAt
 }
 
+
+model Seller {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  phone     String
+  email     String?
+  imageUrl  String
+  bio String
+  totalSold   Int @default(0)
+  status      SellerStatus @default(Pending)
+
+  userId String   @db.ObjectId @unique
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  books Book[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

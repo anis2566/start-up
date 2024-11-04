@@ -20,7 +20,7 @@ export const SellerButton = ({ className }: Props) => {
         <TooltipProvider delayDuration={0}>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Link href="/seller/apply" className={cn(buttonVariants({ variant: "ghost" }), "hover:bg-transparent hover:text-primary", className)} >
+                    <Link href="/seller/register" className={cn(buttonVariants({ variant: "ghost" }), "hover:bg-transparent hover:text-primary", className)} >
                         <span className="mr-2">
                             <Store className="w-5 h-5" />
                         </span>

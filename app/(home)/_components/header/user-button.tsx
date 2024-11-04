@@ -78,12 +78,6 @@ export function UserButton() {
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem className="hover:cursor-pointer" asChild>
-                        <Link href="/user/bookshelf" className="flex items-center">
-                            <BookOpen className="mr-3 h-4 w-4 text-muted-foreground" />
-                            Bookshelf
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="hover:cursor-pointer" asChild>
                         <Link href="/user/reviews" className="flex items-center">
                             <FilePenLine className="mr-3 h-4 w-4 text-muted-foreground" />
                             Reviews

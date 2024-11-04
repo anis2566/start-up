@@ -1,7 +1,4 @@
-import { db } from "@/lib/prisma";
 import { BookPage } from "./_components/book-page"
-import { BookStatus } from "@prisma/client";
-import { savingsPercentage } from "@/lib/utils";
 
 const Books = async () => {
     return (

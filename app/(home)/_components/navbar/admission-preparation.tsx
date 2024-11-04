@@ -18,7 +18,7 @@ export const AdmissionPreparation = () => {
             <div className="grid gap-3 p-4 grid-cols-4">
                 {
                     data?.map((subCategory) => (
-                        <Link href={`/categories/${subCategory.id}`} className="flex items-center gap-x-2 hover:text-muted-foreground transition-colors" key={subCategory.name}>
+                        <Link href={`/books?subcategory=${subCategory.id}`} className="flex items-center gap-x-2 hover:text-muted-foreground transition-colors" key={subCategory.name}>
                             <p className="truncate">{subCategory.name}</p>
                         </Link>
                     ))

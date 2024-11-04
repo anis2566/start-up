@@ -55,21 +55,21 @@ export function Navbar() {
                         </NavigationMenuContent>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <Link href="/categories/6713adf83d27b3f508d0c44e" legacyBehavior passHref>
+                        <Link href="/books?category=6713adf83d27b3f508d0c44e" legacyBehavior passHref>
                             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                 ইসলামি ভাষার বই
                             </NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <Link href="/categories/6713ae6e3d27b3f508d0c44f" legacyBehavior passHref>
+                        <Link href="/books?category=6713ae6e3d27b3f508d0c44f" legacyBehavior passHref>
                             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                 ই-বুক
                             </NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <Link href="/categories/6713ae9c3d27b3f508d0c450" legacyBehavior passHref>
+                        <Link href="/books?category=6713ae9c3d27b3f508d0c450" legacyBehavior passHref>
                             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                 IELTS বই
                             </NavigationMenuLink>

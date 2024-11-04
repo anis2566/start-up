@@ -13,3 +13,19 @@ export const useReview = create<ReviewState>()((set) => ({
     onOpen: (id) => set({ open: true, id }),
     onClose: () => set({ open: false, id: "" }),
 }));
+
+
+interface CreateReviewState {
+    id: string;
+    open: boolean;
+    onOpen: (id: string) => void;
+    onClose: () => void;
+}
+
+export const useCreateReview = create<CreateReviewState>()((set) => ({
+    id: "",
+    open: false,
+    onOpen: (id) => set({ open: true, id }),
+    onClose: () => set({ open: false, id: "" }),
+}));
+

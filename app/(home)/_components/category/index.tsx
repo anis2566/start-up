@@ -43,7 +43,7 @@ export const Category = () => {
                                         </CardHeader>
                                         <CardContent className="grid grid-cols-2 gap-2 p-0 flex-1">
                                             {category.subCategories.map((subCategory) => (
-                                                <Link key={subCategory.id} href={`/category/${subCategory.id}`} className="space-y-1 border border-muted rounded-md p-2 w-full group">
+                                                <Link key={subCategory.id} href={`/books?subcategory=${subCategory.id}`} className="space-y-1 border border-muted rounded-md p-2 w-full group">
                                                     <div className="h-[120px] w-full flex items-center justify-center">
                                                         <Image src={subCategory.imageUrl ?? ""} alt={subCategory.name} width={100} height={100} className="w-full h-full object-contain group-hover:scale-105 group-hover:rotate-12 transition-all duration-300" />
                                                     </div>
@@ -52,7 +52,9 @@ export const Category = () => {
                                             ))}
                                         </CardContent>
                                         <CardFooter className="flex justify-end p-0">
-                                            <Button variant="link" className="text-sm">View All</Button>
+                                            <Button variant="link" className="text-sm" asChild>
+                                                <Link href={`/books/category/${category.id}`}>View All</Link>
+                                            </Button>
                                         </CardFooter>
                                     </Card>
                                 </CarouselItem>

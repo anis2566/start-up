@@ -75,7 +75,7 @@ export const BookCard = ({ book }: Props) => {
                 </div>
                 {
                     book.discountPrice && (
-                        <Badge className="absolute top-2 -left-2 -rotate-45 text-secondary-foreground" variant="default">
+                        <Badge className="absolute top-2 -left-2 -rotate-45 text-secondary-foreground" variant="secondary">
                             {savingsPercentage(book.price, book.discountPrice)}% off
                         </Badge>
                     )

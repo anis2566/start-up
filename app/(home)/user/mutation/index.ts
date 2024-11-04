@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import {
+  CREATE_REVIEW_ACTION,
   UPDATE_USER_ACCOUNT_ACTION,
   UPDATE_USER_AVATAR_ACTION,
   UPDATE_USER_INFO_ACTION,
@@ -91,6 +92,28 @@ export const useUpdateUserPasswordMutation = ({
       if (data.success) {
         toast.success(data.success);
         toggleEditing();
+      }
+    },
+  });
+};
+
+interface CreateReviewMutationProps {
+  onClose: () => void;
+}
+
+export const useCreateReviewMutation = ({
+  onClose,
+}: CreateReviewMutationProps) => {
+  return useMutation({
+    mutationFn: CREATE_REVIEW_ACTION,
+    onSuccess: (data) => {
+      if (data.error) {
+        toast.error(data.error);
+      }
+
+      if (data.success) {
+        toast.success(data.success);
+        onClose();
       }
     },
   });

@@ -20,12 +20,14 @@ export const OrderList = ({ orders }: { orders: OrderWithRelations[] }) => {
     return (
         <Table>
             <TableHeader>
-                <TableHead>Items</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead>Payment Method</TableHead>
-                <TableHead>Payment Status</TableHead>
-                <TableHead>Order Status</TableHead>
-                <TableHead>Action</TableHead>
+                <TableRow>
+                    <TableHead>Items</TableHead>
+                    <TableHead>Total</TableHead>
+                    <TableHead>Payment Method</TableHead>
+                    <TableHead>Payment Status</TableHead>
+                    <TableHead>Order Status</TableHead>
+                    <TableHead>Action</TableHead>
+                </TableRow>
             </TableHeader>
             <TableBody>
                 {

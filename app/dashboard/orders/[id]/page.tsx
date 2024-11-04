@@ -115,35 +115,35 @@ const OrderDetails = async ({ params }: Props) => {
                         </CardHeader>
                         <CardContent className="grid md:grid-cols-2 gap-4">
                             <div>
-                                <p className="font-semibold">Name</p>
+                                <p className="text-sm font-semibold">Name</p>
                                 <p className="text-muted-foreground">{order.name}</p>
                             </div>
                             <div>
-                                <p className="font-semibold">Phone</p>
+                                <p className="text-sm font-semibold">Phone</p>
                                 <p className="text-muted-foreground">{order.phone}</p>
                             </div>
                             <div>
-                                <p className="font-semibold">Alternate Phone</p>
+                                <p className="text-sm font-semibold">Alternate Phone</p>
                                 <p className="text-muted-foreground">{order?.altPhone}</p>
                             </div>
                             <div>
-                                <p className="font-semibold">Country</p>
+                                <p className="text-sm font-semibold">Country</p>
                                 <p className="text-muted-foreground">{order.country}</p>
                             </div>
                             <div>
-                                <p className="font-semibold">City</p>
+                                <p className="text-sm font-semibold">City</p>
                                 <p className="text-muted-foreground">{order.city}</p>
                             </div>
                             <div>
-                                <p className="font-semibold">Thana</p>
+                                <p className="text-sm font-semibold">Thana</p>
                                 <p className="text-muted-foreground">{order.thana}</p>
                             </div>
                             <div>
-                                <p className="font-semibold">Zone</p>
+                                <p className="text-sm font-semibold">Zone</p>
                                 <p className="text-muted-foreground">{order.zone}</p>
                             </div>
                             <div>
-                                <p className="font-semibold">Address</p>
+                                <p className="text-sm font-semibold">Address</p>
                                 <p className="text-muted-foreground">{order.address}</p>
                             </div>
 

@@ -151,6 +151,13 @@ export function getAdminMenuList(pathname: string): Group[] {
           icon: MessageCircleWarning,
           submenus: [],
         },
+        {
+          href: "/dashboard/questions",
+          label: "Questions",
+          active: pathname.includes("/dashboard/questions"),
+          icon: MessageCircleQuestion,
+          submenus: [],
+        },
       ],
     },
     //   {

@@ -11,6 +11,7 @@ import {
 
 import { useGetDiscountBooks } from "../../query";
 import { BookCard, BookCardSkeleton } from "@/components/book-card";
+import Link from "next/link";
 
 export const Discount = () => {
     const { data: discountBooks, isLoading } = useGetDiscountBooks();
@@ -18,7 +19,9 @@ export const Discount = () => {
     return <div className="px-3 md:px-0 space-y-5">
         <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-gray-600">Discount</h2>
-            <Button variant="outline" size="sm">View All</Button>
+            <Button variant="outline" size="sm" asChild>
+                <Link href="/books?discount=true">View All</Link>
+            </Button>
         </div>
 
         <Carousel

@@ -37,8 +37,8 @@ export default async function RootLayout({
             <QueryProvider>
               {children}
               <Toaster />
-              <NextTopLoader showSpinner={false} />
               <ModalProvider />
+              <NextTopLoader showSpinner={false} />
             </QueryProvider>
           </ThemeProvider>
           {/* </WebPushProvider> */}

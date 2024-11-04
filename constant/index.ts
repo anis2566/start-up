@@ -60,11 +60,6 @@ export const userSidebarNavs: UserSidebarNavs[] = [
     icon: ShoppingBag,
   },
   {
-    label: "Bookshelf",
-    href: "/user/bookshelf",
-    icon: BookOpen,
-  },
-  {
     label: "Reviews",
     href: "/user/reviews",
     icon: FilePenLine,

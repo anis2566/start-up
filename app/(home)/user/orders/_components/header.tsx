@@ -14,14 +14,19 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
+import { FilterDrawer } from "./filter-drawer";
+
 export const Header = () => {
     const [perPage, setPerPage] = useState<string>("");
     const [sort, setSort] = useState<string>("");
     const [status, setStatus] = useState<string | OrderStatus>("");
+    const [open, setOpen] = useState<boolean>(false);
 
     const pathname = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams();
+
+    const handleClose = () => setOpen(false);
 
     const handlePerPageChange = (perPage: string) => {
         setPerPage(perPage);
@@ -83,9 +88,13 @@ export const Header = () => {
     };
 
     return (
-        <div className="hidden md:block space-y-2 p-2 shadow-sm shadow-primary">
+        <div className="space-y-2 p-2 shadow-sm shadow-primary">
+            <FilterDrawer open={open} handleClose={() => setOpen(false)} />
             <div className="flex items-center gap-x-3 justify-between">
-                <div className="flex flex-1 items-center gap-x-3">
+                <Button size="sm" variant="outline" onClick={() => setOpen(true)} className="md:hidden">
+                    Filter
+                </Button>
+                <div className="hidden md:flex flex-1 items-center gap-x-3">
                     <Select
                         value={status || ""}
                         onValueChange={(value) =>

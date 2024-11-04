@@ -57,7 +57,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             categoryId: category,
           }),
           ...(subcategory && {
-            subcategoryId: subcategory,
+            subCategoryId: subcategory,
           }),
           ...(publication && {
             publicationId: publication,
@@ -137,6 +137,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         },
         include: getBookDataInclude(),
         orderBy: {
+          ...(sort === "desc" && { createdAt: "desc" }),
           ...(sort === "b_desc" && { createdAt: "desc" }),
           ...(sort === "total_sell_asc" && { totalSold: "asc" }),
           ...(sort === "price_asc" && { price: "asc" }),
@@ -150,6 +151,95 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       db.book.count({
         where: {
           status: BookStatus.Published,
+          ...(author && {
+            author: {
+              name: {
+                contains: author,
+                mode: "insensitive",
+              },
+            },
+          }),
+          ...(category && {
+            categoryId: category,
+          }),
+          ...(subcategory && {
+            subCategoryId: subcategory,
+          }),
+          ...(publication && {
+            publicationId: publication,
+          }),
+          ...(discount && {
+            discountPrice: {
+              not: null,
+            },
+          }),
+          ...(query && {
+            ...(isBanglaQuery && {
+              nameBangla: {
+                contains: banglaQuery || "",
+                mode: "insensitive",
+              },
+            }),
+            ...(!isBanglaQuery && {
+              name: {
+                contains: query,
+                mode: "insensitive",
+              },
+            }),
+          }),
+          ...(minPrice !== null &&
+            maxPrice !== null && {
+              price: {
+                gte: minPrice,
+                lte: maxPrice,
+              },
+            }),
+          ...(minPrice !== null &&
+            maxPrice === null && {
+              price: {
+                gte: minPrice,
+              },
+            }),
+          ...(maxPrice !== null &&
+            minPrice === null && {
+              price: {
+                lte: maxPrice,
+              },
+            }),
+          ...(minDiscount !== null &&
+            maxDiscount !== null && {
+              discountPercent: {
+                gte: minDiscount,
+                lte: maxDiscount,
+              },
+            }),
+          ...(minDiscount !== null &&
+            maxDiscount === null && {
+              discountPercent: {
+                gte: minDiscount,
+              },
+            }),
+          ...(maxDiscount !== null &&
+            minDiscount === null && {
+              discountPercent: {
+                lte: maxDiscount,
+              },
+            }),
+          ...(sort === "discount_desc" || sort === "discount_asc"
+            ? {
+                discountPercent: {
+                  not: null,
+                },
+              }
+            : {}),
+          ...(language && {
+            language: language as Language,
+          }),
+          ...(inStock && {
+            stock: {
+              not: 0,
+            },
+          }),
         },
       }),
     ]);
