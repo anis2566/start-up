@@ -27,7 +27,7 @@ import {
 
 
 import { cn, savingsPercentage } from "@/lib/utils";
-import { useCart } from "@/hooks/use-cart";
+import { useCart, useOpenCartModal } from "@/hooks/use-cart";
 import { useGetTopReviews } from "../../query";
 import { useWishlist } from "@/hooks/use-wishlist";
 
@@ -43,10 +43,12 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
     const { addToCart } = useCart();
     const { addToWishlist } = useWishlist();
     const { reviews, isFetching } = useGetTopReviews({ bookId: book.id });
+    const { onOpen } = useOpenCartModal();
 
     const handleAddToCart = (book: BookWithRelations) => {
         addToCart({ book, price: book.discountPrice ?? book.price, quantity: 1 });
         toast.success("Added to cart");
+        onOpen();
     }
 
     const handleAddToWishlist = () => {

@@ -1,23 +1,19 @@
 import {
-  Users,
   LayoutGrid,
   LucideIcon,
   List,
   Layers3,
-  UserCog,
   BookOpen,
-  Headset,
   MessageCircleQuestion,
-  MessagesSquare,
   PlusCircle,
   BookOpenCheck,
-  FileText,
-  Bell,
-  ScanSearch,
   MessageCircleWarning,
   UserPen,
   Book,
   CalendarArrowUp,
+  GalleryVertical,
+  Users,
+  Radio,
 } from "lucide-react";
 
 type Submenu = {
@@ -158,31 +154,121 @@ export function getAdminMenuList(pathname: string): Group[] {
           icon: MessageCircleQuestion,
           submenus: [],
         },
+        {
+          href: "",
+          label: "Banners",
+          active: pathname.includes("/dashboard/banners"),
+          icon: GalleryVertical,
+          submenus: [
+            {
+              href: "/dashboard/banners/new",
+              label: "New",
+              active: pathname === "/dashboard/banners/new",
+              icon: PlusCircle,
+            },
+            {
+              href: "/dashboard/banners",
+              label: "List",
+              active: pathname === "/dashboard/banners",
+              icon: List,
+            },
+          ],
+        },
       ],
     },
-    //   {
-    //     groupLabel: "Support",
-    //     menus: [
-    //       {
-    //         href: "/admin/chat",
-    //         label: "Chat",
-    //         active: pathname.includes("/admin/chat"),
-    //         icon: MessagesSquare,
-    //         submenus: [],
-    //       },
-    //     ],
-    //   },
-    //   {
-    //     groupLabel: "Notice",
-    //     menus: [
-    //       {
-    //         href: "/admin/notice",
-    //         label: "Notice",
-    //         active: pathname.includes("/admin/notice"),
-    //         icon: Bell,
-    //         submenus: [],
-    //       },
-    //     ],
-    //   },
+    {
+      groupLabel: "Seller",
+      menus: [
+        {
+          href: "",
+          label: "Seller",
+          active: pathname === "/admin/seller",
+          icon: Users,
+          submenus: [
+            {
+              href: "/dashboard/seller/new",
+              label: "New",
+              active: pathname === "/dashboard/seller/new",
+              icon: PlusCircle,
+            },
+            {
+              href: "/dashboard/seller/request",
+              label: "Request",
+              active: pathname === "/dashboard/seller/request",
+              icon: Radio,
+            },
+            {
+              href: "/dashboard/seller",
+              label: "List",
+              active: pathname === "/dashboard/seller",
+              icon: List,
+            },
+          ],
+        },
+      ],
+    },
+  ];
+}
+
+export function getSellerMenuList(pathname: string): Group[] {
+  return [
+    {
+      groupLabel: "",
+      menus: [
+        {
+          href: "/seller",
+          label: "Dashboard",
+          active: pathname === "/seller",
+          icon: LayoutGrid,
+          submenus: [],
+        },
+      ],
+    },
+    {
+      groupLabel: "Main",
+      menus: [
+        {
+          href: "",
+          label: "Books",
+          active: pathname.includes("/seller/books"),
+          icon: BookOpen,
+          submenus: [
+            {
+              href: "/seller/books/new",
+              label: "New",
+              active: pathname === "/seller/books/new",
+              icon: PlusCircle,
+            },
+            {
+              href: "/seller/books",
+              label: "List",
+              active: pathname === "/seller/books",
+              icon: List,
+            },
+          ],
+        },
+        {
+          href: "/seller/orders",
+          label: "Orders",
+          active: pathname.includes("/seller/orders"),
+          icon: CalendarArrowUp,
+          submenus: [],
+        },
+        {
+          href: "/seller/reviews",
+          label: "Reviews",
+          active: pathname.includes("/seller/reviews"),
+          icon: MessageCircleWarning,
+          submenus: [],
+        },
+        {
+          href: "/seller/questions",
+          label: "Questions",
+          active: pathname.includes("/seller/questions"),
+          icon: MessageCircleQuestion,
+          submenus: [],
+        },
+      ],
+    },
   ];
 }

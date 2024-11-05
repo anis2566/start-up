@@ -26,7 +26,7 @@ export const Authors = () => {
                     ))
                 }
             </div>
-            <Link href="/authors" className={cn(buttonVariants({ variant: "link" }), "flex justify-center")}>আরো দেখুন</Link>
+            <Link href="/books/authors" className={cn(buttonVariants({ variant: "link" }), "flex justify-center")}>আরো দেখুন</Link>
         </div>
     )
 }

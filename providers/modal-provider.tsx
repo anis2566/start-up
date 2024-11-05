@@ -14,6 +14,7 @@ import { ReviewModalUser } from "@/app/(home)/user/reviews/_components/review-mo
 import { QuestionViewModal } from "@/app/(home)/user/questions/_components/question-view-modal";
 import { ReplyModal } from "@/app/dashboard/questions/_components/reply-modal";
 import { DeleteQuestionModal } from "@/app/dashboard/questions/_components/delete-modal";
+import { DeleteBannerModal } from "@/app/dashboard/banners/_components/delete-modal";
 
 export const ModalProvider = () => {
     return (
@@ -32,6 +33,7 @@ export const ModalProvider = () => {
             <QuestionViewModal />
             <ReplyModal />
             <DeleteQuestionModal />
+            <DeleteBannerModal />
         </>
     );
 };

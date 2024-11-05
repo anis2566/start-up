@@ -47,8 +47,8 @@ export const Discount = () => {
                     )
                 }
             </CarouselContent>
-            <CarouselPrevious className="absolute top-1/2 left-2 transform -translate-y-1/2 z-50" />
-            <CarouselNext className="absolute top-1/2 right-2 transform -translate-y-1/2 z-50" />
+            <CarouselPrevious className="absolute top-1/2 left-2 transform -translate-y-1/2 z-40" />
+            <CarouselNext className="absolute top-1/2 right-2 transform -translate-y-1/2 z-40" />
         </Carousel>
     </div>;
 };

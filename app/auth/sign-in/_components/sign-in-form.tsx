@@ -50,11 +50,7 @@ export const SignInForm = () => {
       toast.success(data?.success, {
         id: "sign-in-user",
       });
-      if (callbackUrl) {
-        router.push(`/redirect?redirectUrl=${callbackUrl}`)
-      } else {
-        router.push("/")
-      }
+      router.push(`/redirect?redirectUrl=${callbackUrl || "/"}`)
     },
     onError: (error) => {
       toast.error(error.message, {
@@ -75,7 +71,7 @@ export const SignInForm = () => {
     toast.loading("Login...", {
       id: "sign-in-user",
     });
-    signInUser({ values, callbackUrl: callbackUrl ? callbackUrl : "/" });
+    signInUser({ values });
   }
 
   const signInWithGoogle = async () => {

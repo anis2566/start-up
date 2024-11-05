@@ -2,6 +2,7 @@
 
 import {
   AuthorStatus,
+  BannerStatus,
   BookStatus,
   CategoryStatus,
   PublicationStatus,
@@ -167,7 +168,19 @@ export const GET_FEATURE_CATEGORY = async () => {
       status: CategoryStatus.Active,
       isFeatured: true,
     },
-    take: 6
+    take: 6,
   });
   return categories;
+};
+
+export const GET_BANNERS = async () => {
+  const banners = await db.banner.findMany({
+    where: {
+      status: BannerStatus.Active,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return banners;
 };

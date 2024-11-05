@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { auth } from "@/auth";
 import { ModalProvider } from "@/providers/modal-provider";
+import { AppKnockProviders } from "@/providers/knock-provider";
 // import { WebPushProvider } from "@/providers/web-push-provider";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,6 +25,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -34,12 +36,14 @@ export default async function RootLayout({
             defaultTheme="light"
             disableTransitionOnChange
           >
-            <QueryProvider>
-              {children}
-              <Toaster />
-              <ModalProvider />
-              <NextTopLoader showSpinner={false} />
-            </QueryProvider>
+            <AppKnockProviders userId={session?.userId}>
+              <QueryProvider>
+                {children}
+                <Toaster />
+                <ModalProvider />
+                <NextTopLoader showSpinner={false} />
+              </QueryProvider>
+            </AppKnockProviders>
           </ThemeProvider>
           {/* </WebPushProvider> */}
         </SessionProvider>

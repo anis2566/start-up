@@ -1,12 +1,8 @@
-import React from 'react'
-import { CheckCircle, ArrowRight } from 'lucide-react'
-
-import { Button } from '@/components/ui/button'
 import { RegistrationForm } from './_components/registration-form'
 
 const SellerRegister = () => {
     return (
-        <div className='w-full max-w-screen-md mx-auto py-6 space-y-6'>
+        <div className='w-full max-w-screen-md mx-auto py-6 space-y-6 px-3 md:px-0'>
             <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
                 <div className='p-3 space-y-2'>
                     <h2 className="text-2xl sm:text-3xl font-extrabold">

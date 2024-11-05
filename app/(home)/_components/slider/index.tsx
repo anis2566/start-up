@@ -10,8 +10,13 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
+import { Skeleton } from "@/components/ui/skeleton"
+
+import { useGetBanners } from "../../query"
 
 export const Slider = () => {
+    const { data: banners, isLoading } = useGetBanners();
+
     return (
         <div className="w-full px-2 md:px-0">
             <Carousel
@@ -27,15 +32,30 @@ export const Slider = () => {
                 className="w-full max-h-[300px] relative"
             >
                 <CarouselContent>
-                    {Array.from({ length: 5 }).map((_, index) => (
-                        <CarouselItem key={index}>
-                            <Image src={`/slider-1.jpg`} alt={`Slider ${index + 1}`} width={1000} height={194} className="w-full h-full object-cover" />
-                        </CarouselItem>
-                    ))}
+                    {
+                        isLoading ? (
+                            Array.from({ length: 2 }).map((_, index) => (
+                                <CarouselItem key={index}>
+                                    <SliderItemSkeleton />
+                                </CarouselItem>
+                            ))
+                        ) : (
+                            banners?.map((banner, index) => (
+                                <CarouselItem key={index}>
+                                    <Image src={banner.imageUrl} alt={banner.id} width={1000} height={194} className="w-full h-full object-cover" />
+                                </CarouselItem>
+                            ))
+                        )
+                    }
                 </CarouselContent>
                 <CarouselPrevious className="absolute top-1/2 left-2 transform -translate-y-1/2" />
                 <CarouselNext className="absolute top-1/2 right-2 transform -translate-y-1/2" />
             </Carousel>
         </div>
     )
+}
+
+
+const SliderItemSkeleton = () => {
+    return <Skeleton className="w-full h-[120px] md:h-[300px]" />
 }

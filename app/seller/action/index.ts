@@ -3,6 +3,7 @@
 import { db } from "@/lib/prisma";
 import { SellerSchema, SellerSchemaType } from "@/schema/seller.schema";
 import { GET_USER } from "@/services/user.service";
+import { SellerStatus } from "@prisma/client";
 
 export const SELLER_REGISTER_ACTION = async (values: SellerSchemaType) => {
   const { data, success } = SellerSchema.safeParse(values);
@@ -19,12 +20,26 @@ export const SELLER_REGISTER_ACTION = async (values: SellerSchemaType) => {
     const seller = await db.seller.findUnique({
       where: {
         userId,
+        status: SellerStatus.Active,
       },
     });
 
     if (seller) {
       return {
         error: "Seller already registered",
+      };
+    }
+
+    const request = await db.seller.findUnique({
+      where: {
+        userId,
+        status: SellerStatus.Pending,
+      },
+    });
+
+    if (request) {
+      return {
+        error: "Seller request already sent",
       };
     }
 

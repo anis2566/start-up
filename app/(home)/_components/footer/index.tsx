@@ -10,9 +10,7 @@ export const Footer = () => {
             <div className="rounded-2xl border bg-muted/50 p-10 dark:bg-card">
                 <div className="grid grid-cols-2 gap-x-12 gap-y-8 md:grid-cols-5">
                     <div className="col-span-full xl:col-span-2">
-                        <a href="#" className="flex items-center font-bold">
-                            <Logo callbackUrl="/" />
-                        </a>
+                        <Logo callbackUrl="/" />
                     </div>
 
                     {/* Courses section */}

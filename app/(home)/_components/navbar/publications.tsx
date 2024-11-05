@@ -26,7 +26,7 @@ export const Publications = () => {
                     ))
                 }
             </div>
-            <Link href="/publications" className={cn(buttonVariants({ variant: "link" }), "flex justify-center")}>আরো দেখুন</Link>
+            <Link href="/books/publications" className={cn(buttonVariants({ variant: "link" }), "flex justify-center")}>আরো দেখুন</Link>
         </div>
     )
 }

@@ -9,10 +9,9 @@ import { db } from "@/lib/prisma";
 
 type SignInUser = {
   values: SignInSchemaType;
-  callbackUrl: string | null;
 };
 
-export const SIGN_IN_USER = async ({ values, callbackUrl }: SignInUser) => {
+export const SIGN_IN_USER = async ({ values }: SignInUser) => {
   try {
     const user = await db.user.findUnique({
       where: {
@@ -27,8 +26,7 @@ export const SIGN_IN_USER = async ({ values, callbackUrl }: SignInUser) => {
     await signIn("credentials", {
       email: values.email,
       password: values.password,
-        redirect: true,
-        redirectTo: callbackUrl ? callbackUrl : "/",
+      redirect: false,
     });
 
     return { success: "Login successful", user };

@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import {
   GET_AUTHORS,
+  GET_BANNERS,
   GET_CATEGORIES,
   GET_CATEGORIES_HOME,
   GET_DISCOUNT_BOOKS,
@@ -111,6 +112,15 @@ export const useGetFeatureCategory = () => {
   return useQuery({
     queryKey: ["feature-category"],
     queryFn: async () => await GET_FEATURE_CATEGORY(),
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+};
+
+export const useGetBanners = () => {
+  return useQuery({
+    queryKey: ["banners"],
+    queryFn: async () => await GET_BANNERS(),
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 60 * 24,
   });

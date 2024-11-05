@@ -89,6 +89,11 @@ enum SellerStatus {
   Inactive
 }
 
+enum BannerStatus {
+  Active
+  Inactive
+}
+
 model User {
   id               String           @id @default(auto()) @map("_id") @db.ObjectId
   name             String?
@@ -405,6 +410,18 @@ model Seller {
 
   books Book[]
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Banner {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  imageUrl String
+  productId String? @db.ObjectId
+  status BannerStatus @default(Active)
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -2,14 +2,21 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LogOutIcon } from "lucide-react";
+import { signOut } from "next-auth/react";
 
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
 import { userSidebarNavs } from "@/constant";
 
 export const SidebarNavs = () => {
     const pathname = usePathname();
+
+    const handleSignOut = async () => {
+        await signOut();
+    };
+
     return (
         <div className="space-y-2">
             {userSidebarNavs.map((nav) => {
@@ -31,6 +38,11 @@ export const SidebarNavs = () => {
                     </Link>
                 );
             })}
+
+            <Button variant="ghost" className="flex w-full justify-start gap-x-3" onClick={handleSignOut}>
+                <LogOutIcon className="h-4 w-4" />
+                Logout
+            </Button>
         </div>
     );
 };

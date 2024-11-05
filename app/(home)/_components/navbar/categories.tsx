@@ -26,7 +26,7 @@ export const Categories = () => {
                     ))
                 }
             </div>
-            <Link href="/categories" className={cn(buttonVariants({ variant: "link" }), "flex justify-center")}>আরো দেখুন</Link>
+            <Link href="/books/category" className={cn(buttonVariants({ variant: "link" }), "flex justify-center")}>আরো দেখুন</Link>
         </div>
     )
 }

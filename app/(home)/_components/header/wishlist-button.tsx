@@ -16,7 +16,7 @@ export const WishlistButton = () => {
         <TooltipProvider delayDuration={0}>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Link href="/wishlist" className="relative mr-6 md:mr-3">
+                    <Link href="/wishlist" className="hidden md:flex relative mr-6 md:mr-3">
                         <Heart className="w-5 h-5" />
                         <div className={cn("absolute -top-2 -right-4 rounded-full w-5 h-5 flex items-center justify-center text-xs text-white bg-red-500", wishlist.length === 0 && "hidden")}>
                             {wishlist.length}

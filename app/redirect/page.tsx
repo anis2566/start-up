@@ -9,16 +9,14 @@ const ReidrectPage = () => {
 
 
     useEffect(() => {
-        if (redirectUrl !== null) {
+        if (redirectUrl) {
             window.location.href = redirectUrl
-        } else {
-            window.location.href = "/"
         }
     }, [redirectUrl])
 
     return (
         <div className="w-full h-screen flex items-center justify-center text-muted-foreground">
-            Redirecting.......
+            Redirect...
         </div>
     )
 }
