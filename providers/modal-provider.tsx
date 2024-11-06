@@ -15,6 +15,12 @@ import { QuestionViewModal } from "@/app/(home)/user/questions/_components/quest
 import { ReplyModal } from "@/app/dashboard/questions/_components/reply-modal";
 import { DeleteQuestionModal } from "@/app/dashboard/questions/_components/delete-modal";
 import { DeleteBannerModal } from "@/app/dashboard/banners/_components/delete-modal";
+import { SellerStatusModal } from "@/app/dashboard/seller/request/_components/status-modal";
+import { DeleteSellerRequestModal } from "@/app/dashboard/seller/request/_components/delete-modal";
+import { DeleteSellerModal } from "@/app/dashboard/seller/_components/delete-modal";
+import { NewAuthorModal } from "@/app/seller/books/new/_components/new-author.modal";
+import { NewCategoryModal } from "@/app/seller/books/new/_components/new-category.modal";
+import { NewSubCategoryModal } from "@/app/seller/books/new/_components/new-sub-category.modal";
 
 export const ModalProvider = () => {
     return (
@@ -34,6 +40,12 @@ export const ModalProvider = () => {
             <ReplyModal />
             <DeleteQuestionModal />
             <DeleteBannerModal />
+            <SellerStatusModal />
+            <DeleteSellerRequestModal />
+            <DeleteSellerModal />
+            <NewAuthorModal />
+            <NewCategoryModal />
+            <NewSubCategoryModal />
         </>
     );
 };

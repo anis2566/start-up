@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Link from "next/link";
 
 import {
@@ -8,24 +9,16 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+
 import { ContentLayout } from "../../_components/content-layout";
-import { db } from "@/lib/prisma";
-import { SellerStatus } from "@prisma/client";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { RequestList } from "./_components/request-list";
+import { SellerForm } from "./_components/seller-form";
 
+export const metadata: Metadata = {
+    title: "BookGhor | Sellers | New",
+    description: "Add new seller to the system.",
+};
 
-const SellerRequest = async () => {
-    const sellers = await db.seller.findMany({
-        where: {
-            // status: SellerStatus.Pending
-        },
-        include: {
-            user: true
-        }
-    })
-
-
+const NewSeller = () => {
     return (
         <ContentLayout title="Seller">
             <Breadcrumb>
@@ -43,22 +36,14 @@ const SellerRequest = async () => {
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                        <BreadcrumbPage>Request</BreadcrumbPage>
+                        <BreadcrumbPage>New</BreadcrumbPage>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Seller Request</CardTitle>
-                    <CardDescription>List of seller request</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <RequestList sellers={sellers} />
-                </CardContent>
-            </Card>
+            <SellerForm />
         </ContentLayout>
-    )
-}
+    );
+};
 
-export default SellerRequest
+export default NewSeller;

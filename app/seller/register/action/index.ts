@@ -1,9 +1,10 @@
 "use server";
 
+import { Role, SellerStatus } from "@prisma/client";
+
 import { db } from "@/lib/prisma";
 import { SellerSchema, SellerSchemaType } from "@/schema/seller.schema";
 import { GET_USER } from "@/services/user.service";
-import { SellerStatus } from "@prisma/client";
 
 export const SELLER_REGISTER_ACTION = async (values: SellerSchemaType) => {
   const { data, success } = SellerSchema.safeParse(values);
@@ -45,6 +46,11 @@ export const SELLER_REGISTER_ACTION = async (values: SellerSchemaType) => {
 
     await db.seller.create({
       data: { ...data, userId },
+    });
+
+    await db.user.update({
+      where: { id: userId },
+      data: { role: Role.Seller, status: SellerStatus.Pending },
     });
 
     return {

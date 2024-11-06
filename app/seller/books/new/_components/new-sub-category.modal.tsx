@@ -1,56 +1,64 @@
-"use client"
+"use client";
 
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Trash2 } from "lucide-react"
-import { toast } from "sonner"
-import Image from "next/image"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { Trash2 } from "lucide-react";
+import Image from "next/image";
+import { CategoryStatus } from "@prisma/client";
 
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Textarea } from "@/components/ui/textarea"
+import { useNewSubCategory } from "@/hooks/use-sub-category";
+import { SubCategorySchema } from "@/schema/sub-category.schema";
+import { SubCategorySchemaType } from "@/schema/sub-category.schema";
+import { LoadingButton } from "@/components/loading-button";
+import { UploadButton } from "@/lib/uploadthing";
+import { useCreateSubCategoryMutation } from "../../mutation";
 
-import { UploadButton } from "@/lib/uploadthing"
-import { LoadingButton } from "@/components/loading-button"
-import { SellerSchema, SellerSchemaType } from "@/schema/seller.schema"
-import { useSellerRegisterMutation } from "../mutation"
+export const NewSubCategoryModal = () => {
+    const { open, onClose, id } = useNewSubCategory();
 
-export const RegistrationForm = () => {
+    const { mutate, isPending } = useCreateSubCategoryMutation({ onClose });
 
-    const { mutate, isPending } = useSellerRegisterMutation()
-
-    const form = useForm<SellerSchemaType>({
-        resolver: zodResolver(SellerSchema),
+    const form = useForm<SubCategorySchemaType>({
+        resolver: zodResolver(SubCategorySchema),
         defaultValues: {
             name: "",
-            phone: "",
-            email: "",
             imageUrl: "",
-            bio: "",
-        },
-    });
+            description: "",
+            status: CategoryStatus.Inactive
+        }
+    })
 
-    const onSubmit = (data: SellerSchemaType) => {
-        mutate(data)
+    const onSubmit = (data: SubCategorySchemaType) => {
+        mutate({ values: data, categoryId: id });
     }
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Register as a Seller</CardTitle>
-                <CardDescription>
-                    Create your account to get started
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
+        <Dialog open={open} onOpenChange={onClose}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Add New Sub-Category</DialogTitle>
+                    <DialogDescription>Add new sub-category to the system.</DialogDescription>
+                </DialogHeader>
+
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
-                            control={form.control}
                             name="name"
+                            control={form.control}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
@@ -63,27 +71,13 @@ export const RegistrationForm = () => {
                         />
 
                         <FormField
+                            name="description"
                             control={form.control}
-                            name="phone"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Phone</FormLabel>
+                                    <FormLabel>Description</FormLabel>
                                     <FormControl>
-                                        <Input {...field} disabled={isPending} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} disabled={isPending} />
+                                        <Textarea {...field} disabled={isPending} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -104,7 +98,8 @@ export const RegistrationForm = () => {
                                                     width={80}
                                                     height={80}
                                                     className="h-14 w-14 rounded-full"
-                                                    src={form.getValues("imageUrl")}
+                                                    src={form.getValues("imageUrl") || ""}
+                                                    onError={() => form.setValue("imageUrl", "")}
                                                 />
                                                 <Button
                                                     className="absolute right-0 top-0"
@@ -136,30 +131,16 @@ export const RegistrationForm = () => {
                             )}
                         />
 
-                        <FormField
-                            control={form.control}
-                            name="bio"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Bio</FormLabel>
-                                    <FormControl>
-                                        <Textarea rows={5} {...field} disabled={isPending} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
                         <LoadingButton
-                            type="submit"
                             isLoading={isPending}
-                            title="Continue"
-                            loadingTitle="Submitting..."
+                            title="Create"
+                            loadingTitle="Creating..."
                             onClick={form.handleSubmit(onSubmit)}
+                            type="submit"
                         />
                     </form>
                 </Form>
-            </CardContent>
-        </Card>
+            </DialogContent>
+        </Dialog>
     )
-}
+};

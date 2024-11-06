@@ -13,3 +13,15 @@ export const useAuthor = create<AuthorState>()((set) => ({
   onOpen: (id) => set({ open: true, id }),
   onClose: () => set({ open: false, id: "" }),
 }));
+
+interface NewAuthorState {
+  open: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+}
+
+export const useNewAuthor = create<NewAuthorState>()((set) => ({
+  open: false,
+  onOpen: () => set({ open: true }),
+  onClose: () => set({ open: false }),
+}));

@@ -1,73 +1,61 @@
 "use client"
 
-import { Seller, User } from "@prisma/client";
-import { MoreVerticalIcon, RefreshCcw, Trash2 } from "lucide-react";
+import { Seller, SellerStatus } from "@prisma/client";
+import { Eye, MoreVerticalIcon, RefreshCcw, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 
-import { useSeller, useSellerStatus } from "@/hooks/use-seller";
+import { useSellerDelete, useSellerStatus } from "@/hooks/use-seller";
 
-interface SellerWithUser extends Seller {
-    user: User
+interface SellerWithBooks extends Seller {
+    books: { id: string }[];
 }
 
-interface RequestListProps {
-    sellers: SellerWithUser[]
+interface Props {
+    sellers: SellerWithBooks[];
 }
 
-export const RequestList = ({ sellers }: RequestListProps) => {
+export const SellerList = ({ sellers }: Props) => {
     const { onOpen } = useSellerStatus()
-    const { onOpen: onOpenDelete } = useSeller()
+    const { onOpen: onOpenDelete } = useSellerDelete()
 
     return (
         <Table>
             <TableHeader>
                 <TableRow>
-                    <TableHead>User</TableHead>
-                    <TableHead>Name</TableHead>
                     <TableHead>Image</TableHead>
+                    <TableHead>Name</TableHead>
                     <TableHead>Phone</TableHead>
                     <TableHead>Email</TableHead>
+                    <TableHead>Books</TableHead>
+                    <TableHead>Total Sold</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="text-center">Action</TableHead>
+                    <TableHead>Action</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
                 {sellers.map((seller) => (
                     <TableRow key={seller.id}>
                         <TableCell>
-                            <div className="flex items-center gap-2">
-                                <Avatar>
-                                    <AvatarImage src={seller.user.image || ""} />
-                                </Avatar>
-                                <div>
-                                    <p className="text-sm font-medium">{seller.user.name}</p>
-                                    <p className="text-sm text-muted-foreground">{seller.user.email}</p>
-                                </div>
-                            </div>
-                        </TableCell>
-                        <TableCell>{seller.name}</TableCell>
-                        <TableCell>
                             <Avatar>
-                                <AvatarImage src={seller.imageUrl || ""} />
+                                <AvatarImage src={seller.imageUrl} alt={seller.name} />
+                                <AvatarFallback>{seller.name.charAt(0)}</AvatarFallback>
                             </Avatar>
                         </TableCell>
+                        <TableCell>{seller.name}</TableCell>
                         <TableCell>{seller.phone}</TableCell>
                         <TableCell>{seller.email}</TableCell>
+                        <TableCell>{seller.books.length}</TableCell>
+                        <TableCell>{seller.totalSold}</TableCell>
                         <TableCell>
-                            <Badge className="rounded-full">
-                                {seller.status}
-                            </Badge>
+                            <Badge variant={seller.status === SellerStatus.Active ? "default" : "destructive"} className="rounded-full">{seller.status}</Badge>
                         </TableCell>
-                        <TableCell className="flex items-center justify-center">
+                        <TableCell>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="ghost" size="sm">
@@ -75,7 +63,13 @@ export const RequestList = ({ sellers }: RequestListProps) => {
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent side="right" className="p-2 max-w-[180px]">
-                                    <Button variant="ghost" onClick={() => onOpen(seller.id)} className="flex items-center justify-start gap-x-2 w-full">
+                                    <Button asChild variant="ghost" className="flex items-center justify-start gap-x-2 w-full">
+                                        <Link href={`/dashboard/seller/${seller.id}`} >
+                                            <Eye className="w-4 h-4 mr-2" />
+                                            View
+                                        </Link>
+                                    </Button>
+                                    <Button variant="ghost" className="flex items-center justify-start gap-x-2 w-full" onClick={() => onOpen(seller.id)}>
                                         <RefreshCcw className="w-4 h-4 mr-2" />
                                         Change Status
                                     </Button>

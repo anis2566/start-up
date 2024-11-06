@@ -18,6 +18,7 @@ export const authConfig = {
       if (user) {
         token.role = user.role;
         token.userId = user.id ?? "";
+        token.status = user.status;
       }
       return token;
     },
@@ -25,6 +26,7 @@ export const authConfig = {
       session.role = token.role;
       session.userId = token.userId;
       session.user.role = token.role;
+      session.status = token.status;
       return session;
     },
   },
@@ -66,7 +68,12 @@ export const authConfig = {
           throw new Error("Invalid credentials");
         }
 
-        if (user) return { ...user, isVerified: !!user.emailVerified };
+        if (user)
+          return {
+            ...user,
+            isVerified: !!user.emailVerified,
+            status: user.status,
+          };
 
         return null;
       },

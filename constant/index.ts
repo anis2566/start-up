@@ -7,6 +7,7 @@ import {
   MessageCircle,
   Sparkles,
   Gift,
+  LayoutDashboard,
 } from "lucide-react";
 
 export const EDITIONS: string[] = [
@@ -73,5 +74,26 @@ export const userSidebarNavs: UserSidebarNavs[] = [
     label: "Points",
     href: "/user/points",
     icon: Sparkles,
+  },
+];
+
+type SellerSidebarNavs = {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+  isHome?: boolean;
+};
+
+export const sellerSidebarNavs: SellerSidebarNavs[] = [
+  {
+    href: "/",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    isHome: true,
+  },
+  {
+    href: "/profile",
+    label: "Profile",
+    icon: User,
   },
 ];

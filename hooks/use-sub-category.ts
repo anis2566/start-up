@@ -13,3 +13,17 @@ export const useSubCategory = create<SubCategoryState>()((set) => ({
   onOpen: (id) => set({ open: true, id }),
   onClose: () => set({ open: false, id: "" }),
 }));
+
+interface NewSubCategoryState {
+  open: boolean;
+  id: string;
+  onOpen: (id: string) => void;
+  onClose: () => void;
+}
+
+export const useNewSubCategory = create<NewSubCategoryState>()((set) => ({
+  open: false,
+  id: "",
+  onOpen: (id) => set({ open: true, id }),
+  onClose: () => set({ open: false, id: "" }),
+}));

@@ -10,6 +10,7 @@ generator client {
 enum Role {
   User
   Admin
+  Seller
 }
 
 enum AuthorStatus {
@@ -106,6 +107,7 @@ model User {
   dob              DateTime?
   accounts         Account[]
   role             Role             @default(User)
+  status           SellerStatus     @default(Pending)
 
   pushSubscription PushSubscriber[]
   reviews          Review[]

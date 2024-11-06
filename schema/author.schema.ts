@@ -1,7 +1,7 @@
 import { AuthorStatus } from "@prisma/client";
 import { z } from "zod";
 
-const requiredString = z.string().min(1);
+const requiredString = z.string().min(1, { message: "required" });
 
 export const AuthorSchema = z.object({
   name: requiredString.min(4, { message: "min 4 characters" }),
