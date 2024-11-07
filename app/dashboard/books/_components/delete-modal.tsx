@@ -1,10 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -14,23 +11,16 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useDeleteBookMutation } from "../mutation";
+import { useBook } from "@/hooks/use-book";
+import { LoadingButton } from "@/components/loading-button";
 
 export const DeleteBookModal = () => {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const id = searchParams.get("id");
-    const open = searchParams.get("open") === "deleteBook";
-
-    const onClose = () => {
-        router.push("/dashboard/books");
-    }
+    const { onClose, id, open } = useBook();
 
     const { mutate, isPending } = useDeleteBookMutation({ onClose });
 
     const handleDelete = () => {
-        if (id) {
-            mutate(id);
-        }
+        mutate(id);
     };
 
     return (
@@ -47,9 +37,14 @@ export const DeleteBookModal = () => {
                     <AlertDialogCancel onClick={onClose} disabled={isPending}>
                         Cancel
                     </AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDelete} disabled={isPending}>
-                        Continue
-                    </AlertDialogAction>
+                    <LoadingButton
+                        isLoading={isPending}
+                        title="Continue"
+                        loadingTitle="Deleting..."
+                        onClick={handleDelete}
+                        type="submit"
+                        variant="destructive"
+                    />
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

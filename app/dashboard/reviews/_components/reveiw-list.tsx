@@ -1,11 +1,14 @@
+"use client"
+
 import { Review, Book, User } from "@prisma/client";
-import { EllipsisVertical, Trash2 } from "lucide-react";
-import Link from "next/link";
+import { Trash2, MoreVerticalIcon } from "lucide-react";
 
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+
+import { useDeleteReview } from "@/hooks/use-review";
 
 interface ReviewWithBookAndUser extends Review {
     book: Book;
@@ -17,6 +20,8 @@ interface ReviewListProps {
 }
 
 export const ReviewList = ({ reviews }: ReviewListProps) => {
+    const { onOpen: onOpenDeleteReview } = useDeleteReview();
+
     return (
         <Table>
             <TableHeader>
@@ -51,22 +56,19 @@ export const ReviewList = ({ reviews }: ReviewListProps) => {
                         <TableCell>{review.rating}</TableCell>
                         <TableCell>{review.content.length > 40 ? `${review.content.slice(0, 40)}...` : review.content}</TableCell>
                         <TableCell>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" className="h-8 w-8 p-0">
-                                        <span className="sr-only">Open menu</span>
-                                        <EllipsisVertical className="h-4 w-4" />
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                        <MoreVerticalIcon className="w-4 h-4" />
                                     </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem asChild>
-                                        <Link href={`/dashboard/reviews?open=deleteReview&id=${review.id}`} className="flex items-center gap-x-3">
-                                            <Trash2 className="h-4 w-4 text-red-500" />
-                                            <p className="text-red-500">Delete</p>
-                                        </Link>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                                </PopoverTrigger>
+                                <PopoverContent side="right" className="p-2 max-w-[180px]">
+                                    <Button variant="ghost" className="flex items-center justify-start gap-x-2 w-full text-red-500 hover:text-red-400" onClick={() => onOpenDeleteReview(review.id)}>
+                                        <Trash2 className="w-4 h-4 mr-2" />
+                                        Delete
+                                    </Button>
+                                </PopoverContent>
+                            </Popover>
                         </TableCell>
                     </TableRow>
                 ))}

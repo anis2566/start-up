@@ -20,7 +20,7 @@ export const Authors = () => {
                 {
                     data?.map((author) => (
                         <Link href={`/books?author=${author.name}`} className="flex items-center gap-x-2 hover:text-muted-foreground transition-colors" key={author.name}>
-                            <Image src={author.imageUrl} alt={author.name} width={20} height={20} className="rounded-full" />
+                            {author.imageUrl && <Image src={author.imageUrl} alt={author.name} width={20} height={20} className="rounded-full" />}
                             <p className="truncate">{author.name}</p>
                         </Link>
                     ))

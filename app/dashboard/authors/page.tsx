@@ -51,6 +51,13 @@ const Authors = async ({ searchParams }: Props) => {
                 ...(name && { name: { contains: name, mode: "insensitive" } }),
                 ...(status && { status: status }),
             },
+            include: {
+                books: {
+                    select: {
+                        id: true,
+                    }
+                }
+            },
             orderBy: {
                 createdAt: sort === "asc" ? "asc" : "desc",
             },

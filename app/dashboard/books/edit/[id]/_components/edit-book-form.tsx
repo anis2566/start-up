@@ -6,7 +6,8 @@ import Image from "next/image";
 import { CheckIcon, Loader, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
-import { Author, Book, BookStatus, Category, Publication, SubCategory } from "@prisma/client";
+import { Author, Book, BookStatus, Category, Language, Publication, SubCategory } from "@prisma/client";
+import Link from "next/link";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -76,10 +77,12 @@ export const EditBookForm = ({ book }: Props) => {
             isbn: book.isbn ?? undefined,
             authorId: book.authorId,
             categoryId: book.categoryId,
-            subCategoryId: book.subCategoryId ?? "",
+            subCategoryId: book.subCategoryId ?? undefined,
             publicationId: book.publicationId,
             status: book.status,
             stock: book.stock,
+            language: book.language,
+            demoPdfUrl: book.demoPdfUrl ?? "",
         },
     });
 
@@ -152,6 +155,31 @@ export const EditBookForm = ({ book }: Props) => {
                                         <FormControl>
                                             <Input type="number" {...field} onChange={(e) => field.onChange(Number(e.target.value))} disabled={isPending} />
                                         </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="language"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Language</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select language" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {
+                                                    Object.values(Language).map((language) => (
+                                                        <SelectItem key={language} value={language}>{language}</SelectItem>
+                                                    ))
+                                                }
+                                            </SelectContent>
+                                        </Select>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -576,6 +604,54 @@ export const EditBookForm = ({ book }: Props) => {
                                         <FormLabel>Discount Price</FormLabel>
                                         <FormControl>
                                             <Input type="number" {...field} onChange={(e) => field.onChange(Number(e.target.value))} disabled={isPending} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Demo PDF</CardTitle>
+                            <CardDescription>
+                                Edit demo pdf to the book.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name="demoPdfUrl"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            {form.getValues("demoPdfUrl") ? (
+                                                <div className="relative">
+                                                    <Link href={form.getValues("demoPdfUrl") || ""} target="_blank" className="text-center hover:underline">PDF Preview</Link>
+                                                    <Button
+                                                        className="absolute right-0 top-0"
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => form.setValue("demoPdfUrl", "")}
+                                                        type="button"
+                                                        disabled={isPending}
+                                                    >
+                                                        <Trash2Icon className="text-rose-500" />
+                                                    </Button>
+                                                </div>
+                                            ) : (
+                                                <UploadButton
+                                                    endpoint="pdfUploader"
+                                                    onClientUploadComplete={(res) => {
+                                                        field.onChange(res[0].url);
+                                                        toast.success("PDF uploaded");
+                                                    }}
+                                                    onUploadError={(error: Error) => {
+                                                        toast.error("PDF upload failed");
+                                                    }}
+                                                    disabled={isPending}
+                                                />
+                                            )}
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

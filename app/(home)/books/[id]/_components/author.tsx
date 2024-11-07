@@ -8,7 +8,7 @@ interface AuthorProps {
 export const Author = ({author}: AuthorProps) => {
     return <div className="grid md:grid-cols-5 mt-4">
         <div className="flex justify-center items-center">
-            <Image src={author.imageUrl} alt={author.name} width={150} height={150} className="rounded-full" />
+            {author.imageUrl && <Image src={author.imageUrl} alt={author.name} width={150} height={150} className="rounded-full" />}
         </div>
         <div className="md:col-span-4 space-y-3">
             <h1 className="text-2xl font-bold">{author.name}</h1>

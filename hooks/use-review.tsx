@@ -29,3 +29,18 @@ export const useCreateReview = create<CreateReviewState>()((set) => ({
     onClose: () => set({ open: false, id: "" }),
 }));
 
+
+interface DeleteReviewState {
+    id: string;
+    open: boolean;
+    onOpen: (id: string) => void;
+    onClose: () => void;
+}
+
+export const useDeleteReview = create<DeleteReviewState>()((set) => ({
+    id: "",
+    open: false,
+    onOpen: (id) => set({ open: true, id }),
+    onClose: () => set({ open: false, id: "" }),
+}));
+

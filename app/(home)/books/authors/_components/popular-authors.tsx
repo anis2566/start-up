@@ -27,7 +27,7 @@ export const PopularAuthors = ({ authors }: PopularAuthorsProps) => {
                                 <CarouselItem key={author.id} className="basis-1/2 md:basis-1/6">
                                     <Link href={`/books?author=${author.name}`} className="block space-y-2 border p-2 rounded-lg group">
                                         <div className="relative aspect-square max-h-12 mx-auto">
-                                            <Image src={author.imageUrl} alt={author.name} fill className="object-cover rounded-full mx-auto" />
+                                            {author.imageUrl && <Image src={author.imageUrl} alt={author.name} fill className="object-cover rounded-full mx-auto" />}
                                         </div>
                                         <p className="text-sm font-medium text-gray-600 text-center group-hover:text-primary">{author.name}</p>
                                     </Link>

@@ -1,5 +1,7 @@
-import { Author, Book, BookStatus, Category, Publication } from "@prisma/client";
-import { EllipsisVertical, Pen, Trash2 } from "lucide-react";
+"use client";
+
+import { Author, Book, BookStatus, Category, Publication, Seller } from "@prisma/client";
+import { MoreVerticalIcon, Pen, RefreshCcw, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 import {
@@ -13,12 +15,16 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+
+import { EmptyData } from "@/components/empty-data";
+import { useBook, useBookStatus } from "@/hooks/use-book";
 
 interface BookWithRelations extends Book {
     category: Category;
     author: Author;
     publication: Publication;
+    seller: Seller | null;
 }
 
 interface Props {
@@ -26,12 +32,19 @@ interface Props {
 }
 
 export const BookList = ({ books }: Props) => {
+    const { onOpen } = useBook();
+    const { onOpen: onOpenBookStatus } = useBookStatus();
+
+    if (books.length === 0) {
+        return <EmptyData title="No books found" />
+    }
 
     return (
         <Table>
             <TableHeader>
                 <TableHead>Image</TableHead>
                 <TableHead>Name</TableHead>
+                <TableHead>Seller</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Author</TableHead>
                 <TableHead>Publisher</TableHead>
@@ -52,6 +65,7 @@ export const BookList = ({ books }: Props) => {
                             </Avatar>
                         </TableCell>
                         <TableCell>{book.name}</TableCell>
+                        <TableCell>{book.seller?.name}</TableCell>
                         <TableCell>{book.category.name}</TableCell>
                         <TableCell>{book.author.name}</TableCell>
                         <TableCell>{book.publication.name}</TableCell>
@@ -63,31 +77,29 @@ export const BookList = ({ books }: Props) => {
                             <Badge variant={book.status === BookStatus.Unpublished ? "destructive" : "default"} className="rounded-full">{book.status}</Badge>
                         </TableCell>
                         <TableCell>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" className="h-8 w-8 p-0">
-                                        <span className="sr-only">Open menu</span>
-                                        <EllipsisVertical className="h-4 w-4" />
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                        <MoreVerticalIcon className="w-4 h-4" />
                                     </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem asChild>
-                                        <Link
-                                            href={`/dashboard/books/edit/${book.id}`}
-                                            className="flex items-center gap-x-3"
-                                        >
-                                            <Pen className="h-4 w-4" />
+                                </PopoverTrigger>
+                                <PopoverContent side="right" className="p-2 max-w-[180px]">
+                                    <Button asChild variant="ghost" className="flex items-center justify-start gap-x-2 w-full">
+                                        <Link href={`/dashboard/books/edit/${book.id}`} >
+                                            <Pen className="w-4 h-4 mr-2" />
                                             Edit
                                         </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem asChild>
-                                        <Link href={`/dashboard/books?open=deleteBook&id=${book.id}`} className="flex items-center gap-x-3">
-                                            <Trash2 className="h-4 w-4 text-rose-500" />
-                                            Delete
-                                        </Link>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                                    </Button>
+                                    <Button variant="ghost" className="flex items-center justify-start gap-x-2 w-full" onClick={() => onOpenBookStatus(book.id)}>
+                                        <RefreshCcw className="w-4 h-4 mr-2" />
+                                        Change Status
+                                    </Button>
+                                    <Button variant="ghost" className="flex items-center justify-start gap-x-2 w-full text-red-500 hover:text-red-400" onClick={() => onOpen(book.id)}>
+                                        <Trash2 className="w-4 h-4 mr-2" />
+                                        Delete
+                                    </Button>
+                                </PopoverContent>
+                            </Popover>
                         </TableCell>
                     </TableRow>
                 ))}

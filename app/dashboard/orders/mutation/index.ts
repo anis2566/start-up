@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { UPDATE_ORDER_STATUS_ACTION } from "../action";
+import { DELETE_ORDER_ACTION, UPDATE_ORDER_STATUS_ACTION } from "../action";
 
 interface UpdateOrderStatusMutationProps {
   onClose: () => void;
@@ -20,6 +20,28 @@ export const useUpdateOrderStatusMutation = ({
     },
     onError: (error) => {
       toast.error(error.message);
+    },
+  });
+};
+
+interface DeleteOrderMutationProps {
+  onClose: () => void;
+}
+
+export const useDeleteOrderMutation = ({
+  onClose,
+}: DeleteOrderMutationProps) => {
+  return useMutation({
+    mutationFn: DELETE_ORDER_ACTION,
+    onSuccess: (data) => {
+      if (data?.success) {
+        toast.success(data.success);
+        onClose();
+      }
+
+      if (data?.error) {
+        toast.error(data.error);
+      }
     },
   });
 };

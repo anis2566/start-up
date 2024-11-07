@@ -45,7 +45,7 @@ export const EditAuthorForm = ({ author }: Props) => {
         defaultValues: {
             name: author.name,
             email: author.email ?? "",
-            imageUrl: author.imageUrl,
+            imageUrl: author.imageUrl || "",
             bio: author.bio,
             status: author.status,
         },
@@ -106,7 +106,7 @@ export const EditAuthorForm = ({ author }: Props) => {
                                                     width={80}
                                                     height={80}
                                                     className="h-14 w-14 rounded-full"
-                                                    src={form.getValues("imageUrl")}
+                                                    src={form.getValues("imageUrl") || ""}
                                                     onError={() => form.setValue("imageUrl", "")}
                                                 />
                                                 <Button
@@ -167,7 +167,7 @@ export const EditAuthorForm = ({ author }: Props) => {
                                         </FormControl>
                                         <SelectContent>
                                             {
-                                                Object.values(AuthorStatus).slice(1, 3).map((status) => (
+                                                Object.values(AuthorStatus).map((status) => (
                                                     <SelectItem key={status} value={status}>{status}</SelectItem>
                                                 ))
                                             }

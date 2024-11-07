@@ -1,10 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -14,23 +11,16 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useDeleteCategoryMutation } from "../mutation";
+import { useCategory } from "@/hooks/use-category";
+import { LoadingButton } from "@/components/loading-button";
 
 export const DeleteCategoryModal = () => {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const id = searchParams.get("id");
-    const open = searchParams.get("open") === "deleteCategory";
-
-    const onClose = () => {
-        router.push("/dashboard/categories");
-    }
+    const { id, open, onClose } = useCategory();
 
     const { mutate, isPending } = useDeleteCategoryMutation({ onClose });
 
     const handleDelete = () => {
-        if (id) {
-            mutate(id);
-        }
+        mutate(id);
     };
 
     return (
@@ -47,9 +37,14 @@ export const DeleteCategoryModal = () => {
                     <AlertDialogCancel onClick={onClose} disabled={isPending}>
                         Cancel
                     </AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDelete} disabled={isPending}>
-                        Continue
-                    </AlertDialogAction>
+                    <LoadingButton
+                        isLoading={isPending}
+                        title="Continue"
+                        loadingTitle="Deleting..."
+                        onClick={handleDelete}
+                        type="submit"
+                        variant="destructive"
+                    />
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

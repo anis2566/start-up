@@ -27,6 +27,7 @@ import { Button } from "@/components/ui/button";
 
 import { db } from "@/lib/prisma";
 import { ContentLayout } from "../../_components/content-layout";
+import { StatusButton } from "./_components/status-button";
 
 export const metadata: Metadata = {
     title: "BookGhor | Order Details",
@@ -175,12 +176,7 @@ const OrderDetails = async ({ params }: Props) => {
                                 <Badge className="rounded-full h-6" variant={order.status === OrderStatus.Pending ? "outline" : order.status === OrderStatus.Processing ? "outline" : order.status === OrderStatus.Shipped ? "secondary" : order.status === OrderStatus.Delivered ? "default" : "destructive"}>
                                     {order.status}
                                 </Badge>
-                                <Button variant="outline" disabled={order.status === OrderStatus.Delivered || order.status === OrderStatus.Cancelled}>
-                                    <Link href={`/dashboard/orders?open=changeStatus&id=${order.id}&path=/dashboard/orders/${params.id}`} className="flex items-center gap-x-3">
-                                        <RefreshCcw className="h-4 w-4" />
-                                        <p>Change Status</p>
-                                    </Link>
-                                </Button>
+                                <StatusButton status={order.status} id={order.id} />
                             </div>
                         </CardFooter>
                     </Card>

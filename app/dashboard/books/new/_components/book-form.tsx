@@ -6,7 +6,7 @@ import Image from "next/image";
 import { CheckIcon, Loader, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
-import { BookStatus } from "@prisma/client";
+import { BookStatus, Language } from "@prisma/client";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -27,6 +27,7 @@ import { BookSchema, BookSchemaType } from "@/schema/book.schema";
 import { UploadButton } from "@/lib/uploadthing";
 import { useGetAuthorsForBooksQuery, useGetCategoriesForBooksQuery, useGetPublishersForBooksQuery, useGetSubCategoriesForBooksQuery } from "../../query";
 import { LoadingButton } from "@/components/loading-button";
+import Link from "next/link";
 
 export const BookForm = () => {
     const [authorSearch, setAuthorSearch] = useState<string>("");
@@ -58,10 +59,12 @@ export const BookForm = () => {
             isbn: undefined,
             authorId: "",
             categoryId: "",
-            subCategoryId: "",
+            subCategoryId: undefined,
             publicationId: "",
             status: undefined,
             stock: undefined,
+            language: undefined,
+            demoPdfUrl: "",
         },
     });
 
@@ -138,6 +141,31 @@ export const BookForm = () => {
                                     </FormItem>
                                 )}
                             />
+
+                            <FormField
+                                control={form.control}
+                                name="language"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Language</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select language" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {
+                                                    Object.values(Language).map((language) => (
+                                                        <SelectItem key={language} value={language}>{language}</SelectItem>
+                                                    ))
+                                                }
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                         </CardContent>
                     </Card>
                     <Card>
@@ -204,9 +232,9 @@ export const BookForm = () => {
                     </Card>
                     <Card>
                         <CardHeader>
-                            <CardTitle>Media</CardTitle>
+                            <CardTitle>Thumbnail</CardTitle>
                             <CardDescription>
-                                Add book media to the book.
+                                Add thumbnail to the book.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -215,7 +243,6 @@ export const BookForm = () => {
                                 name="imageUrl"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Thumbnail</FormLabel>
                                         <FormControl>
                                             {form.getValues("imageUrl") ? (
                                                 <div className="relative aspect-square max-h-[150px]">
@@ -558,6 +585,54 @@ export const BookForm = () => {
                                         <FormLabel>Discount Price</FormLabel>
                                         <FormControl>
                                             <Input type="number" {...field} onChange={(e) => field.onChange(Number(e.target.value))} disabled={isPending} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Demo PDF</CardTitle>
+                            <CardDescription>
+                                Add demo pdf to the book.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name="demoPdfUrl"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            {form.getValues("demoPdfUrl") ? (
+                                                <div className="relative">
+                                                    <Link href={form.getValues("demoPdfUrl") || ""} target="_blank" className="text-center hover:underline">PDF Preview</Link>
+                                                    <Button
+                                                        className="absolute right-0 top-0"
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => form.setValue("demoPdfUrl", "")}
+                                                        type="button"
+                                                        disabled={isPending}
+                                                    >
+                                                        <Trash2Icon className="text-rose-500" />
+                                                    </Button>
+                                                </div>
+                                            ) : (
+                                                <UploadButton
+                                                    endpoint="pdfUploader"
+                                                    onClientUploadComplete={(res) => {
+                                                        field.onChange(res[0].url);
+                                                        toast.success("PDF uploaded");
+                                                    }}
+                                                    onUploadError={(error: Error) => {
+                                                        toast.error("PDF upload failed");
+                                                    }}
+                                                    disabled={isPending}
+                                                />
+                                            )}
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

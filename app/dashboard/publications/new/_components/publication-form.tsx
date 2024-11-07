@@ -88,7 +88,7 @@ export const PublicationForm = () => {
                                                     width={80}
                                                     height={80}
                                                     className="h-14 w-14 rounded-full"
-                                                    src={form.getValues("imageUrl")}
+                                                    src={form.getValues("imageUrl") || ""}
                                                     onError={() => form.setValue("imageUrl", "")}
                                                 />
                                                 <Button

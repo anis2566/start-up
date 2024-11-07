@@ -27,7 +27,7 @@ export const PopularPublications = ({ publications }: PopularPublicationsProps) 
                                 <CarouselItem key={publication.id} className="basis-1/2 md:basis-1/6">
                                     <Link href={`/books?publication=${publication.id}`} className="block space-y-2 border p-2 rounded-lg group">
                                         <div className="relative aspect-square max-h-12 mx-auto">
-                                            <Image src={publication.imageUrl} alt={publication.name} fill className="object-cover rounded-full mx-auto" />
+                                            {publication.imageUrl && <Image src={publication.imageUrl} alt={publication.name} fill className="object-cover rounded-full mx-auto" />}
                                         </div>
                                         <p className="text-sm font-medium text-gray-600 text-center group-hover:text-primary">{publication.name}</p>
                                     </Link>

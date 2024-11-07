@@ -1,10 +1,11 @@
 "use client";
 
 import { Answer, Book, Question, User } from "@prisma/client";
-import { MessageCircleReply, Trash2 } from "lucide-react";
+import { MessageCircleReply, Trash2, MoreVerticalIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 
 import { useQuestionDelete, useQuestionReply } from "@/hooks/use-question";
 
@@ -30,7 +31,7 @@ export const QuestionList = ({ questions }: QuestionListProps) => {
                     <TableHead>Book</TableHead>
                     <TableHead>Question</TableHead>
                     <TableHead>Answers</TableHead>
-                    <TableHead className="text-center">Action</TableHead>
+                    <TableHead>Action</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -40,13 +41,24 @@ export const QuestionList = ({ questions }: QuestionListProps) => {
                         <TableCell>{question.book.name}</TableCell>
                         <TableCell>{question.question}</TableCell>
                         <TableCell>{question.answers.length}</TableCell>
-                        <TableCell className="flex justify-center">
-                            <Button variant="ghost" size="icon" onClick={() => onOpen(question.id)}>
-                                <MessageCircleReply className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="icon" onClick={() => onOpenDelete(question.id)}>
-                                <Trash2 className="h-4 w-4 text-red-500" />
-                            </Button>
+                        <TableCell>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                        <MoreVerticalIcon className="w-4 h-4" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent side="right" className="p-2 max-w-[180px]">
+                                    <Button variant="ghost" className="flex items-center justify-start gap-x-2 w-full" onClick={() => onOpen(question.id)}>
+                                        <MessageCircleReply className="w-4 h-4 mr-2" />
+                                        Reply
+                                    </Button>
+                                    <Button variant="ghost" className="flex items-center justify-start gap-x-2 w-full text-red-500 hover:text-red-400" onClick={() => onOpenDelete(question.id)}>
+                                        <Trash2 className="w-4 h-4 mr-2" />
+                                        Delete
+                                    </Button>
+                                </PopoverContent>
+                            </Popover>
                         </TableCell>
                     </TableRow>
                 ))}

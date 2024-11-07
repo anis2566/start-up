@@ -6,7 +6,8 @@ import Image from "next/image";
 import { CheckIcon, Loader, PlusCircle, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
-import { BookStatus } from "@prisma/client";
+import { BookStatus, Language } from "@prisma/client";
+import Link from "next/link";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -29,6 +30,8 @@ import { useGetAuthorsForBooksQuery, useGetCategoriesForBooksQuery, useGetPublis
 import { useNewAuthor } from "@/hooks/use-authro";
 import { useNewCategory } from "@/hooks/use-category";
 import { useNewSubCategory } from "@/hooks/use-sub-category";
+import { useNewPublication } from "@/hooks/use-publication";
+import { useCreateBookMutation } from "../../mutation";
 
 export const BookForm = () => {
     const [authorSearch, setAuthorSearch] = useState<string>("");
@@ -43,9 +46,9 @@ export const BookForm = () => {
     const { onOpen: onOpenNewAuthor } = useNewAuthor();
     const { onOpen: onOpenNewCategory } = useNewCategory();
     const { onOpen: onOpenNewSubCategory } = useNewSubCategory();
+    const { onOpen: onOpenNewPublication } = useNewPublication();
 
-    // const { mutate, isPending } = useCreateBookMutation();
-    let isPending = false;
+    const { mutate, isPending } = useCreateBookMutation();
 
     const { data: authors, isLoading } = useGetAuthorsForBooksQuery(authorSearch);
     const { data: categories, isLoading: categoriesLoading } = useGetCategoriesForBooksQuery(categorySearch);
@@ -65,9 +68,9 @@ export const BookForm = () => {
             isbn: undefined,
             authorId: "",
             categoryId: "",
-            subCategoryId: "",
+            subCategoryId: undefined,
             publicationId: "",
-            status: undefined,
+            status: BookStatus.Unpublished,
             stock: undefined,
         },
     });
@@ -75,8 +78,9 @@ export const BookForm = () => {
     const { data: subCategories, isLoading: subCategoriesLoading } = useGetSubCategoriesForBooksQuery(form.watch("categoryId"), subCategorySearch);
 
     const onSubmit = (values: BookSchemaType) => {
-        // mutate(values);
+        mutate(values);
     };
+
 
     return (
         <Form {...form}>
@@ -141,6 +145,31 @@ export const BookForm = () => {
                                         <FormControl>
                                             <Input type="number" {...field} onChange={(e) => field.onChange(Number(e.target.value))} disabled={isPending} />
                                         </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="language"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Language</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select language" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {
+                                                    Object.values(Language).map((language) => (
+                                                        <SelectItem key={language} value={language}>{language}</SelectItem>
+                                                    ))
+                                                }
+                                            </SelectContent>
+                                        </Select>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -211,9 +240,9 @@ export const BookForm = () => {
                     </Card>
                     <Card>
                         <CardHeader>
-                            <CardTitle>Media</CardTitle>
+                            <CardTitle>Thumbnail</CardTitle>
                             <CardDescription>
-                                Add book media to the book.
+                                Add thumbnail to the book.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -222,7 +251,6 @@ export const BookForm = () => {
                                 name="imageUrl"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Thumbnail</FormLabel>
                                         <FormControl>
                                             {form.getValues("imageUrl") ? (
                                                 <div className="relative aspect-square max-h-[150px]">
@@ -303,15 +331,12 @@ export const BookForm = () => {
                                                     }
                                                     {
                                                         !isLoading && authors?.map((author) => (
-                                                            <div key={author.id} className="flex items-center justify-between cursor-pointer p-1 hover:bg-gray-100 rounded-md">
-                                                                <div
-                                                                    className="flex items-center gap-2"
-                                                                    onClick={() => {
-                                                                        setSelectedAuthor(author.name);
-                                                                        field.onChange(author.id);
-                                                                    }}
-                                                                >
-                                                                    <Image src={author.imageUrl} alt={author.name} width={30} height={30} className="rounded-full" />
+                                                            <div key={author.id} className="flex items-center justify-between cursor-pointer p-1 hover:bg-gray-100 rounded-md" onClick={() => {
+                                                                setSelectedAuthor(author.name);
+                                                                field.onChange(author.id);
+                                                            }}>
+                                                                <div className="flex items-center gap-2">
+                                                                    {author.imageUrl && <Image src={author.imageUrl} alt={author.name} width={30} height={30} className="rounded-full" />}
                                                                     <p>{author.name}</p>
                                                                 </div>
                                                                 {
@@ -381,14 +406,11 @@ export const BookForm = () => {
                                                     }
                                                     {
                                                         !categoriesLoading && categories?.map((category) => (
-                                                            <div key={category.id} className="flex items-center justify-between cursor-pointer p-1 hover:bg-gray-100 rounded-md">
-                                                                <div
-                                                                    className="flex items-center gap-2"
-                                                                    onClick={() => {
-                                                                        setSelectedCategory(category.name);
-                                                                        field.onChange(category.id);
-                                                                    }}
-                                                                >
+                                                            <div key={category.id} className="flex items-center justify-between cursor-pointer p-1 hover:bg-gray-100 rounded-md" onClick={() => {
+                                                                setSelectedCategory(category.name);
+                                                                field.onChange(category.id);
+                                                            }}>
+                                                                <div className="flex items-center gap-2">
                                                                     <p>{category.name}</p>
                                                                 </div>
                                                                 {
@@ -449,14 +471,11 @@ export const BookForm = () => {
                                                     }
                                                     {
                                                         !subCategoriesLoading && subCategories?.map((subCategory) => (
-                                                            <div key={subCategory.id} className="flex items-center justify-between cursor-pointer p-1 hover:bg-gray-100 rounded-md">
-                                                                <div
-                                                                    className="flex items-center gap-2"
-                                                                    onClick={() => {
-                                                                        setSelectedSubCategory(subCategory.name);
-                                                                        field.onChange(subCategory.id);
-                                                                    }}
-                                                                >
+                                                            <div key={subCategory.id} className="flex items-center justify-between cursor-pointer p-1 hover:bg-gray-100 rounded-md" onClick={() => {
+                                                                setSelectedSubCategory(subCategory.name);
+                                                                field.onChange(subCategory.id);
+                                                            }}>
+                                                                <div className="flex items-center gap-2">
                                                                     <p>{subCategory.name}</p>
                                                                 </div>
                                                                 {
@@ -526,14 +545,11 @@ export const BookForm = () => {
                                                     }
                                                     {
                                                         !publishersLoading && publishers?.map((publisher) => (
-                                                            <div key={publisher.id} className="flex items-center justify-between cursor-pointer p-1 hover:bg-gray-100 rounded-md">
-                                                                <div
-                                                                    className="flex items-center gap-2"
-                                                                    onClick={() => {
-                                                                        setSelectedPublisher(publisher.name);
-                                                                        field.onChange(publisher.id);
-                                                                    }}
-                                                                >
+                                                            <div key={publisher.id} className="flex items-center justify-between cursor-pointer p-1 hover:bg-gray-100 rounded-md" onClick={() => {
+                                                                setSelectedPublisher(publisher.name);
+                                                                field.onChange(publisher.id);
+                                                            }}>
+                                                                <div className="flex items-center gap-2">
                                                                     <p>{publisher.name}</p>
                                                                 </div>
                                                                 {
@@ -549,6 +565,14 @@ export const BookForm = () => {
                                                             <p className="text-sm text-gray-500 text-center">No publications found</p>
                                                         )
                                                     }
+
+                                                    <div className="flex items-center justify-center gap-x-2">
+                                                        <p className="text-sm text-gray-500">Don&apos;t see your publication?</p>
+                                                        <Button type="button" variant="secondary" disabled={isPending} onClick={onOpenNewPublication}>
+                                                            <PlusCircle className="w-4 h-4 mr-2" />
+                                                            <span>Add New</span>
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                             </PopoverContent>
                                         </Popover>
@@ -598,35 +622,50 @@ export const BookForm = () => {
                     </Card>
                     <Card>
                         <CardHeader>
-                            <CardTitle>Status</CardTitle>
+                            <CardTitle>Demo PDF</CardTitle>
                             <CardDescription>
-                                Add status to the book.
+                                Add demo pdf to the book.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <FormField
                                 control={form.control}
-                                name="status"
+                                name="demoPdfUrl"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isPending}>
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select status" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {
-                                                    Object.values(BookStatus).map((status) => (
-                                                        <SelectItem key={status} value={status}>{status}</SelectItem>
-                                                    ))
-                                                }
-                                            </SelectContent>
-                                        </Select>
+                                        <FormControl>
+                                            {form.getValues("demoPdfUrl") ? (
+                                                <div className="relative">
+                                                    <Link href={form.getValues("demoPdfUrl") || ""} target="_blank" className="text-center hover:underline">PDF Preview</Link>
+                                                    <Button
+                                                        className="absolute right-0 top-0"
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={() => form.setValue("demoPdfUrl", "")}
+                                                        type="button"
+                                                        disabled={isPending}
+                                                    >
+                                                        <Trash2Icon className="text-rose-500" />
+                                                    </Button>
+                                                </div>
+                                            ) : (
+                                                <UploadButton
+                                                    endpoint="pdfUploader"
+                                                    onClientUploadComplete={(res) => {
+                                                        field.onChange(res[0].url);
+                                                        toast.success("PDF uploaded");
+                                                    }}
+                                                    onUploadError={(error: Error) => {
+                                                        toast.error("PDF upload failed");
+                                                    }}
+                                                    disabled={isPending}
+                                                />
+                                            )}
+                                        </FormControl>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
-
                         </CardContent>
                     </Card>
 

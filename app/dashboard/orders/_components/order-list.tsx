@@ -1,12 +1,16 @@
+"use client";
 import { Order, OrderItem, Book, User, PaymentStatus, OrderStatus } from "@prisma/client";
-import { EllipsisVertical, Eye, RefreshCcw } from "lucide-react";
+import { Eye, RefreshCcw, MoreVerticalIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+
+import { useOrder, useOrderStatus } from "@/hooks/use-order";
+import { EmptyData } from "@/components/empty-data";
 
 interface OrderItemWithBook extends OrderItem {
     book: Book;
@@ -22,6 +26,12 @@ interface Props {
 }
 
 export const OrderList = ({ orders }: Props) => {
+    const { onOpen: onOpenOrderStatus } = useOrderStatus();
+    const { onOpen: onOpenDeleteOrder } = useOrder();
+
+    if (orders.length === 0) {
+        return <EmptyData title="No orders found" />
+    }
 
     return (
         <div>
@@ -76,31 +86,29 @@ export const OrderList = ({ orders }: Props) => {
                                 </Badge>
                             </TableCell>
                             <TableCell>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" className="h-8 w-8 p-0">
-                                            <span className="sr-only">Open menu</span>
-                                            <EllipsisVertical className="h-4 w-4" />
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button variant="ghost" size="sm">
+                                            <MoreVerticalIcon className="w-4 h-4" />
                                         </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem asChild>
-                                            <Link
-                                                href={`/dashboard/orders/${order.id}`}
-                                                className="flex items-center gap-x-3"
-                                            >
-                                                <Eye className="h-4 w-4" />
+                                    </PopoverTrigger>
+                                    <PopoverContent side="right" className="p-2 max-w-[180px]">
+                                        <Button asChild variant="ghost" className="flex items-center justify-start gap-x-2 w-full">
+                                            <Link href={`/dashboard/orders/${order.id}`} >
+                                                <Eye className="w-4 h-4 mr-2" />
                                                 View
                                             </Link>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem asChild>
-                                            <Link href={`/dashboard/orders?open=changeStatus&id=${order.id}`} className="flex items-center gap-x-3">
-                                                <RefreshCcw className="h-4 w-4" />
-                                                <p>Change Status</p>
-                                            </Link>
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                        </Button>
+                                        <Button variant="ghost" className="flex items-center justify-start gap-x-2 w-full" onClick={() => onOpenOrderStatus(order.id)}>
+                                            <RefreshCcw className="w-4 h-4 mr-2" />
+                                            Change Status
+                                        </Button>
+                                        <Button variant="ghost" className="flex items-center justify-start gap-x-2 w-full text-red-500 hover:text-red-400" onClick={() => onOpenDeleteOrder(order.id)}>
+                                            <Trash2 className="w-4 h-4 mr-2" />
+                                            Delete
+                                        </Button>
+                                    </PopoverContent>
+                                </Popover>
                             </TableCell>
                         </TableRow>
                     ))}

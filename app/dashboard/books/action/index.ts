@@ -5,6 +5,7 @@ import { transliterate as tr } from "transliteration";
 
 import { db } from "@/lib/prisma";
 import { BookSchema, BookSchemaType } from "@/schema/book.schema";
+import { BookStatus } from "@prisma/client";
 
 export const CREATE_BOOK_ACTION = async (values: BookSchemaType) => {
   const { data, success } = BookSchema.safeParse(values);
@@ -48,6 +49,7 @@ export const CREATE_BOOK_ACTION = async (values: BookSchemaType) => {
       success: "Book created successfully",
     };
   } catch (error) {
+    console.log(error);
     return {
       error: "Failed to create book",
     };
@@ -94,6 +96,7 @@ export const EDIT_BOOK_ACTION = async ({ id, values }: EditBook) => {
       success: "Book updated successfully",
     };
   } catch (error) {
+    console.log(error);
     return {
       error: "Failed to edit book",
     };
@@ -233,4 +236,40 @@ export const GET_PUBLISHERS_FOR_BOOKS_ACTION = async (search?: string) => {
   });
 
   return publishers;
+};
+
+interface ChangeBookStatus {
+  id: string;
+  status: BookStatus;
+}
+
+export const CHANGE_BOOK_STATUS_ACTION = async ({
+  id,
+  status,
+}: ChangeBookStatus) => {
+  try {
+    const book = await db.book.findUnique({
+      where: { id },
+    });
+
+    if (!book)
+      return {
+        error: "Book not found",
+      };
+
+    await db.book.update({
+      where: { id },
+      data: { status },
+    });
+
+    revalidatePath("/dashboard/books");
+
+    return {
+      success: "Book status changed.",
+    };
+  } catch (error) {
+    return {
+      error: "Failed to change book status",
+    };
+  }
 };

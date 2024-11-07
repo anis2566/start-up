@@ -13,3 +13,17 @@ export const useOrder = create<OrderState>()((set) => ({
   onOpen: (id) => set({ open: true, id }),
   onClose: () => set({ open: false, id: "" }),
 }));
+
+interface OrderStatusState {
+  open: boolean;
+  id: string;
+  onOpen: (id: string) => void;
+  onClose: () => void;
+}
+
+export const useOrderStatus = create<OrderStatusState>()((set) => ({
+  open: false,
+  id: "",
+  onOpen: (id) => set({ open: true, id }),
+  onClose: () => set({ open: false, id: "" }),
+}));

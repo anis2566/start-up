@@ -30,7 +30,7 @@ export const EditPublicationForm = ({ publication }: Props) => {
         resolver: zodResolver(PublicationSchema),
         defaultValues: {
             name: publication.name,
-            imageUrl: publication.imageUrl,
+            imageUrl: publication.imageUrl || "",
             description: publication.description ?? "",
             status: publication.status
         }
@@ -91,7 +91,7 @@ export const EditPublicationForm = ({ publication }: Props) => {
                                                     width={80}
                                                     height={80}
                                                     className="h-14 w-14 rounded-full"
-                                                    src={form.getValues("imageUrl")}
+                                                    src={form.getValues("imageUrl") || ""}
                                                     onError={() => form.setValue("imageUrl", "")}
                                                 />
                                                 <Button

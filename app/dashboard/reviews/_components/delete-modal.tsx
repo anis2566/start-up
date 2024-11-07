@@ -1,10 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -14,24 +11,17 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useDeleteReviewMutation } from "../mutation";
+import { useDeleteReview } from "@/hooks/use-review";
+import { LoadingButton } from "@/components/loading-button";
 
 
 export const DeleteReviewModal = () => {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const id = searchParams.get("id");
-    const open = searchParams.get("open") === "deleteReview";
-
-    const onClose = () => {
-        router.push("/dashboard/reviews");
-    }
+    const { id, open, onClose } = useDeleteReview();
 
     const { mutate, isPending } = useDeleteReviewMutation({ onClose });
 
     const handleDelete = () => {
-        if (id) {
-            mutate(id);
-        }
+        mutate(id);
     };
 
     return (
@@ -48,9 +38,14 @@ export const DeleteReviewModal = () => {
                     <AlertDialogCancel onClick={onClose} disabled={isPending}>
                         Cancel
                     </AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDelete} disabled={isPending}>
-                        Continue
-                    </AlertDialogAction>
+                    <LoadingButton
+                        isLoading={isPending}
+                        title="Continue"
+                        loadingTitle="Deleting..."
+                        onClick={handleDelete}
+                        type="submit"
+                        variant="destructive"
+                    />
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

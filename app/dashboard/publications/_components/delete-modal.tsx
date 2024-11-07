@@ -1,10 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -14,23 +11,16 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useDeletePublicationMutation } from "../mutation";
+import { usePublication } from "@/hooks/use-publication";
+import { LoadingButton } from "@/components/loading-button";
 
 export const DeletePublicationModal = () => {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const id = searchParams.get("id");
-    const open = searchParams.get("open") === "deletePublication";
-
-    const onClose = () => {
-        router.push("/dashboard/publications");
-    }
+    const { id, open, onClose } = usePublication()
 
     const { mutate, isPending } = useDeletePublicationMutation({ onClose });
 
     const handleDelete = () => {
-        if (id) {
-            mutate(id);
-        }
+        mutate(id);
     };
 
     return (
@@ -47,9 +37,14 @@ export const DeletePublicationModal = () => {
                     <AlertDialogCancel onClick={onClose} disabled={isPending}>
                         Cancel
                     </AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDelete} disabled={isPending}>
-                        Continue
-                    </AlertDialogAction>
+                    <LoadingButton
+                        onClick={handleDelete}
+                        isLoading={isPending}
+                        title="Continue"
+                        loadingTitle="Deleting..."
+                        type="submit"
+                        variant="destructive"
+                    />
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

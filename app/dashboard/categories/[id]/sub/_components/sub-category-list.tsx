@@ -1,20 +1,24 @@
 "use client"
 
 import { CategoryStatus, SubCategory } from "@prisma/client";
-import { BookOpen, EllipsisVertical, Pen, Trash2 } from "lucide-react";
+import { BookOpen, Pen, Trash2, MoreVerticalIcon } from "lucide-react";
 import Link from "next/link";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { useSubCategory } from "@/hooks/use-sub-category";
 import { EmptyData } from "@/components/empty-data";
 
+interface SubCategoryWithBooks extends SubCategory {
+    books: { id: string }[];
+}
+
 interface Props {
-    subCategories: SubCategory[];
+    subCategories: SubCategoryWithBooks[];
     categoryId: string;
 }
 
@@ -50,46 +54,36 @@ export const SubCategoryList = ({ subCategories, categoryId }: Props) => {
                             </Avatar>
                         </TableCell>
                         <TableCell>{subCategory.name}</TableCell>
-                        <TableCell>{5}</TableCell>
+                        <TableCell>{subCategory.books.length}</TableCell>
                         <TableCell>
                             <Badge className="rounded-full" variant={subCategory.status === CategoryStatus.Active ? "default" : "destructive"}>{subCategory.status}</Badge>
                         </TableCell>
                         <TableCell>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" className="h-8 w-8 p-0">
-                                        <span className="sr-only">Open menu</span>
-                                        <EllipsisVertical className="h-4 w-4" />
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                        <MoreVerticalIcon className="w-4 h-4" />
                                     </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem asChild>
-                                        <Link
-                                            href={`/dashboard/categories/${categoryId}/sub/${subCategory.id}`}
-                                            className="flex items-center gap-x-3"
-                                        >
-                                            <BookOpen className="h-4 w-4" />
+                                </PopoverTrigger>
+                                <PopoverContent side="right" className="p-2 max-w-[180px]">
+                                    <Button asChild variant="ghost" className="flex items-center justify-start gap-x-2 w-full">
+                                        <Link href={`/dashboard/categories/${categoryId}/sub/${subCategory.id}`} >
+                                            <BookOpen className="h-4 w-4 mr-2" />
                                             View Books
                                         </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem asChild>
-                                        <Link
-                                            href={`/dashboard/categories/${categoryId}/sub/edit/${subCategory.id}`}
-                                            className="flex items-center gap-x-3"
-                                        >
-                                            <Pen className="h-4 w-4" />
+                                    </Button>
+                                    <Button asChild variant="ghost" className="flex items-center justify-start gap-x-2 w-full">
+                                        <Link href={`/dashboard/categories/${categoryId}/sub/edit/${subCategory.id}`} >
+                                            <Pen className="h-4 w-4 mr-2" />
                                             Edit
                                         </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        className="w-flex items-center gap-x-3"
-                                        onClick={() => onOpen(subCategory.id)}
-                                    >
-                                        <Trash2 className="h-4 w-4 text-rose-500" />
+                                    </Button>
+                                    <Button variant="ghost" className="flex items-center justify-start gap-x-2 w-full text-red-500 hover:text-red-400" onClick={() => onOpen(subCategory.id)}>
+                                        <Trash2 className="w-4 h-4 mr-2" />
                                         Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                                    </Button>
+                                </PopoverContent>
+                            </Popover>
                         </TableCell>
                     </TableRow>
                 ))}

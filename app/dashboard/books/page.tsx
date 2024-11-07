@@ -35,6 +35,7 @@ interface Props {
         category?: string;
         author?: string;
         publisher?: string;
+        seller?: string;
         sort?: string;
         page?: string;
         perPage?: string;
@@ -43,7 +44,7 @@ interface Props {
 }
 
 const Books = async ({ searchParams }: Props) => {
-    const { name, sort, page = "1", perPage = "5", status, category, author, publisher } = searchParams;
+    const { name, sort, page = "1", perPage = "5", status, category, author, publisher, seller } = searchParams;
 
     const itemsPerPage = parseInt(perPage, 10);
     const currentPage = parseInt(page, 10);
@@ -55,12 +56,14 @@ const Books = async ({ searchParams }: Props) => {
                 ...(category && { category: { name: { contains: category, mode: "insensitive" } } }),
                 ...(author && { author: { name: { contains: author, mode: "insensitive" } } }),
                 ...(publisher && { publication: { name: { contains: publisher, mode: "insensitive" } } }),
+                ...(seller && { seller: { name: { contains: seller, mode: "insensitive" } } }),
                 ...(status && { status: status }),
             },
             include: {
                 category: true,
                 author: true,
                 publication: true,
+                seller: true,
             },
             orderBy: {
                 createdAt: sort === "asc" ? "asc" : "desc",
@@ -71,6 +74,10 @@ const Books = async ({ searchParams }: Props) => {
         db.book.count({
             where: {
                 ...(name && { name: { contains: name, mode: "insensitive" } }),
+                ...(category && { category: { name: { contains: category, mode: "insensitive" } } }),
+                ...(author && { author: { name: { contains: author, mode: "insensitive" } } }),
+                ...(publisher && { publication: { name: { contains: publisher, mode: "insensitive" } } }),
+                ...(seller && { seller: { name: { contains: seller, mode: "insensitive" } } }),
                 ...(status && { status: status }),
             },
         }),

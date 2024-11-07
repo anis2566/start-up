@@ -21,6 +21,10 @@ import { DeleteSellerModal } from "@/app/dashboard/seller/_components/delete-mod
 import { NewAuthorModal } from "@/app/seller/books/new/_components/new-author.modal";
 import { NewCategoryModal } from "@/app/seller/books/new/_components/new-category.modal";
 import { NewSubCategoryModal } from "@/app/seller/books/new/_components/new-sub-category.modal";
+import { NewPublicationModal } from "@/app/seller/books/new/_components/new-publication.modal";
+import { DeleteSellerBookModal } from "@/app/seller/books/_components/delete-modal";
+import { BookStatusModal } from "@/app/dashboard/books/_components/status-modal";
+import { DeleteOrderModal } from "@/app/dashboard/orders/_components/delete-modal";
 
 export const ModalProvider = () => {
     return (
@@ -46,6 +50,10 @@ export const ModalProvider = () => {
             <NewAuthorModal />
             <NewCategoryModal />
             <NewSubCategoryModal />
+            <NewPublicationModal />
+            <DeleteSellerBookModal />
+            <BookStatusModal />
+            <DeleteOrderModal />
         </>
     );
 };

@@ -42,9 +42,9 @@ export function getAdminMenuList(pathname: string): Group[] {
       groupLabel: "",
       menus: [
         {
-          href: "/admin",
+          href: "/dashboard",
           label: "Dashboard",
-          active: pathname === "/admin",
+          active: pathname === "/dashboard",
           icon: LayoutGrid,
           submenus: [],
         },

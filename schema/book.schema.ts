@@ -1,4 +1,4 @@
-import { BookStatus } from "@prisma/client";
+import { BookStatus, Language } from "@prisma/client";
 import { z } from "zod";
 
 const requiredString = z.string().min(1, { message: "required" });
@@ -23,6 +23,12 @@ export const BookSchema = z.object({
     .refine((val) => Object.values(BookStatus).includes(val), {
       message: "required",
     }),
+  language: z
+    .nativeEnum(Language)
+    .refine((val) => Object.values(Language).includes(val), {
+      message: "required",
+    }),
+  demoPdfUrl: z.string().optional(),
 });
 
 export type BookSchemaType = z.infer<typeof BookSchema>;

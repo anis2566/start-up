@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OrderStatus } from "@prisma/client";
-import { useRouter, useSearchParams } from "next/navigation";
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -12,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 import { LoadingButton } from "@/components/loading-button";
 import { useUpdateOrderStatusMutation } from "../mutation";
+import { useOrderStatus } from "@/hooks/use-order";
 
 const formSchema = z.object({
     status: z.nativeEnum(OrderStatus)
@@ -21,15 +21,7 @@ const formSchema = z.object({
 });
 
 export const OrderStatusModal = () => {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const open = searchParams.get("open") === "changeStatus";
-    const id = searchParams.get("id");
-    const path = searchParams.get("path");
-
-    const onClose = () => {
-        router.push(path || "/dashboard/orders");
-    }
+    const { open, id, onClose } = useOrderStatus();
 
     const { mutate, isPending } = useUpdateOrderStatusMutation({ onClose });
 
@@ -41,7 +33,6 @@ export const OrderStatusModal = () => {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        if (!id) return;
         mutate({
             id,
             status: values.status,
@@ -89,7 +80,7 @@ export const OrderStatusModal = () => {
 
                         <LoadingButton
                             isLoading={isPending}
-                            title="Update Status"
+                            title="Update"
                             loadingTitle="Updating..."
                             onClick={form.handleSubmit(onSubmit)}
                             type="submit"

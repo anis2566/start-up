@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { transliterate as tr } from "transliteration";
 
 import { db } from "@/lib/prisma";
 import { CategorySchema, CategorySchemaType } from "@/schema/category.schema";
@@ -31,9 +32,18 @@ export const CREATE_CATEGORY_ACTION = async (values: CategorySchemaType) => {
       };
     }
 
+    let nameBangla = "";
+
+    const isBangla = (text: string) => /[\u0980-\u09FF]/.test(text);
+
+    if (isBangla(data.name)) {
+      nameBangla = tr(data.name);
+    }
+
     await db.category.create({
       data: {
         ...data,
+        nameBangla,
       },
     });
 
@@ -159,10 +169,19 @@ export const CREATE_SUB_CATEGORY_ACTION = async ({
       };
     }
 
+    let nameBangla = "";
+
+    const isBangla = (text: string) => /[\u0980-\u09FF]/.test(text);
+
+    if (isBangla(data.name)) {
+      nameBangla = tr(data.name);
+    }
+
     await db.subCategory.create({
       data: {
         ...data,
         categoryId,
+        nameBangla,
       },
     });
 

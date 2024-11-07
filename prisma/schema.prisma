@@ -95,6 +95,21 @@ enum BannerStatus {
   Inactive
 }
 
+enum Month {
+  January
+  February
+  March
+  April
+  May
+  June
+  July
+  August
+  September
+  October
+  November
+  December
+}
+
 model User {
   id               String           @id @default(auto()) @map("_id") @db.ObjectId
   name             String?
@@ -170,10 +185,12 @@ model PushSubscriber {
 model Author {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
+  nameBangla String?
   email     String?   
-  imageUrl  String
+  imageUrl  String?
   bio       String
   status    AuthorStatus @default(Pending)
+  totalSold Int @default(0)
 
   books Book[]
 
@@ -185,6 +202,7 @@ model Author {
 model Category {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
+  nameBangla String?
   imageUrl  String
   description String?
   status      CategoryStatus @default(Active)
@@ -201,6 +219,7 @@ model Category {
 model SubCategory {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
+  nameBangla String?
   imageUrl  String?
   description String?
   status      CategoryStatus @default(Active)
@@ -218,7 +237,8 @@ model SubCategory {
 model Publication {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  imageUrl  String
+  nameBangla String?
+  imageUrl  String?
   description String
   status      PublicationStatus @default(Pending)
 
@@ -328,6 +348,7 @@ model Order {
   thana     String
   zone      String?
   address   String
+  month     Month
 
   totalPrice Float
   shippingCharge Float

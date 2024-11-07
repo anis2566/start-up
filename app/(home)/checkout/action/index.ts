@@ -3,6 +3,7 @@
 import { db } from "@/lib/prisma";
 import { OrderSchema, OrderSchemaType } from "@/schema/order.schema";
 import { GET_USER } from "@/services/user.service";
+import { Month } from "@prisma/client";
 
 export const CREATE_ORDER_ACTION = async (values: OrderSchemaType) => {
   const { data, success } = OrderSchema.safeParse(values);
@@ -43,6 +44,7 @@ export const CREATE_ORDER_ACTION = async (values: OrderSchemaType) => {
           },
         },
         userId,
+        month: Object.values(Month)[new Date().getMonth()],
       },
       include: {
         orderItems: true,

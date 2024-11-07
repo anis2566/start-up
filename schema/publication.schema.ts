@@ -5,7 +5,7 @@ const requiredString = z.string().min(1, { message: "required" });
 
 export const PublicationSchema = z.object({
   name: requiredString,
-  imageUrl: requiredString,
+  imageUrl: z.string().optional(),
   description: requiredString,
   status: z
     .nativeEnum(PublicationStatus)

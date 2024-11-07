@@ -2,7 +2,6 @@
 
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -13,6 +12,7 @@ import {
 
 import { useSubCategory } from "@/hooks/use-sub-category";
 import { useDeleteSubCategoryMutation } from "../../../mutation";
+import { LoadingButton } from "@/components/loading-button";
 
 export const DeleteSubCategoryModal = () => {
     const { open, id, onClose } = useSubCategory();
@@ -37,9 +37,14 @@ export const DeleteSubCategoryModal = () => {
                     <AlertDialogCancel onClick={onClose} disabled={isPending}>
                         Cancel
                     </AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDelete} disabled={isPending}>
-                        Continue
-                    </AlertDialogAction>
+                    <LoadingButton
+                        isLoading={isPending}
+                        title="Continue"
+                        loadingTitle="Deleting..."
+                        onClick={handleDelete}
+                        type="submit"
+                        variant="destructive"
+                    />
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { transliterate as tr } from "transliteration";
 
 import { db } from "@/lib/prisma";
 import { AuthorSchema, AuthorSchemaType } from "@/schema/author.schema";
@@ -26,9 +27,18 @@ export const CREATE_AUTHOR_ACTION = async (values: AuthorSchemaType) => {
       };
     }
 
+    let nameBangla = "";
+
+    const isBangla = (text: string) => /[\u0980-\u09FF]/.test(text);
+
+    if (isBangla(data.name)) {
+      nameBangla = tr(data.name);
+    }
+
     await db.author.create({
       data: {
         ...data,
+        nameBangla,
       },
     });
 
