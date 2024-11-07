@@ -7,7 +7,6 @@ import { OrderStat } from './_components/order-stat'
 import { EarningChart } from './_components/chart/earning-chart'
 import { RecentOrders } from './_components/recent-orders'
 import { db } from '@/lib/prisma'
-import { Calendar } from '@/components/ui/calendar'
 import { GET_DASHBOARD_DATA } from './action'
 
 const Dashboard = async () => {
@@ -31,7 +30,6 @@ const Dashboard = async () => {
                     <RecentOrders orders={recentOrders} />
                 </div>
                 <div className='md:col-span-1'>
-                    <Calendar className="[&_[role=gridcell].bg-accent]:bg-sidebar-primary [&_[role=gridcell].bg-accent]:text-sidebar-primary-foreground [&_[role=gridcell]]:w-[33px]" />
                 </div>
             </div>
         </ContentLayout>

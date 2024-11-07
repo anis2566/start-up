@@ -350,7 +350,6 @@ export const EditBookForm = ({ book }: Props) => {
                                                                         field.onChange(author.id);
                                                                     }}
                                                                 >
-                                                                    <Image src={author.imageUrl} alt={author.name} width={30} height={30} className="rounded-full" />
                                                                     <p>{author.name}</p>
                                                                 </div>
                                                                 {

@@ -336,7 +336,6 @@ export const BookForm = () => {
                                                                 field.onChange(author.id);
                                                             }}>
                                                                 <div className="flex items-center gap-2">
-                                                                    {author.imageUrl && <Image src={author.imageUrl} alt={author.name} width={30} height={30} className="rounded-full" />}
                                                                     <p>{author.name}</p>
                                                                 </div>
                                                                 {
