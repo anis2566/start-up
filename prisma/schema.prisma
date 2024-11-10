@@ -45,6 +45,7 @@ enum BookStatus {
 enum OrderStatus {
   Pending
   Processing
+  Warehouse
   Shipped
   Delivered
   Cancelled

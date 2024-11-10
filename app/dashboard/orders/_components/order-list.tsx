@@ -45,6 +45,7 @@ export const OrderList = ({ orders }: Props) => {
                         <TableHead>Subtotal</TableHead>
                         <TableHead>Shipping</TableHead>
                         <TableHead>Total</TableHead>
+                        <TableHead>Payment Method</TableHead>
                         <TableHead>Payment Status</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Action</TableHead>
@@ -75,6 +76,9 @@ export const OrderList = ({ orders }: Props) => {
                             <TableCell>৳{order.totalPrice}</TableCell>
                             <TableCell>৳{order.shippingCharge}</TableCell>
                             <TableCell>৳{order.totalPaidAmount}</TableCell>
+                            <TableCell>
+                                <Badge>{order.paymentMethod}</Badge>
+                            </TableCell>
                             <TableCell>
                                 <Badge className="rounded-full" variant={order.paymentStatus === PaymentStatus.Paid ? "default" : order.paymentStatus === PaymentStatus.Failed ? "destructive" : "outline"}>
                                     {order.paymentStatus}

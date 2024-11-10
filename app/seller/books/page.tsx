@@ -54,7 +54,9 @@ const Books = async ({ searchParams }: Props) => {
     const [books, totalBooks] = await Promise.all([
         db.book.findMany({
             where: {
-                sellerId: userId,
+                seller: {
+                    userId: userId,
+                },
                 ...(name && { name: { contains: name, mode: "insensitive" } }),
                 ...(category && { category: { name: { contains: category, mode: "insensitive" } } }),
                 ...(author && { author: { name: { contains: author, mode: "insensitive" } } }),
@@ -74,7 +76,9 @@ const Books = async ({ searchParams }: Props) => {
         }),
         db.book.count({
             where: {
-                sellerId: userId,
+                seller: {
+                    userId: userId,
+                },
                 ...(name && { name: { contains: name, mode: "insensitive" } }),
                 ...(category && { category: { name: { contains: category, mode: "insensitive" } } }),
                 ...(author && { author: { name: { contains: author, mode: "insensitive" } } }),

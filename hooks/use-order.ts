@@ -27,3 +27,10 @@ export const useOrderStatus = create<OrderStatusState>()((set) => ({
   onOpen: (id) => set({ open: true, id }),
   onClose: () => set({ open: false, id: "" }),
 }));
+
+export const useSellerOrderStatus = create<OrderStatusState>()((set) => ({
+  open: false,
+  id: "",
+  onOpen: (id) => set({ open: true, id }),
+  onClose: () => set({ open: false, id: "" }),
+}));

@@ -129,16 +129,20 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
             <div className="flex md:hidden">
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button variant="outline" size="lg" className="px-5 w-full">
-                            <Eye className="w-4 h-4 mr-2" />
-                            <span>একটু পড়ুন</span>
-                        </Button>
+                        {
+                            book.demoPdfUrl && (
+                                <Button variant="outline" size="lg" className="px-5 w-full">
+                                    <Eye className="w-4 h-4 mr-2" />
+                                    <span>একটু পড়ুন</span>
+                                </Button>
+                            )
+                        }
                     </DialogTrigger>
                     <DialogContent className="max-w-[800px] h-[80%]">
                         <div className="h-[100%] w-[100%] overflow-hidden">
                             <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                                 <Viewer
-                                    fileUrl="https://utfs.io/f/aT7im4PMBNXCdOQlUoCbZguaKWepqki5fRJlwyTcmXP49roE"
+                                    fileUrl={book.demoPdfUrl ?? ""}
                                     defaultScale={1}
                                     enableSmoothScroll
                                 />
@@ -161,16 +165,20 @@ export default function BookDetails({ book }: { book: BookWithRelations }) {
             <div className="hidden md:flex items-center gap-x-2">
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button variant="outline" size="lg" className="px-5">
-                            <Eye className="w-4 h-4 mr-2" />
-                            <span>একটু পড়ুন</span>
-                        </Button>
+                        {
+                            book.demoPdfUrl && (
+                                <Button variant="outline" size="lg" className="px-5">
+                                    <Eye className="w-4 h-4 mr-2" />
+                                    <span>একটু পড়ুন</span>
+                                </Button>
+                            )
+                        }
                     </DialogTrigger>
                     <DialogContent className="max-w-[800px] h-[80%]">
                         <div className="h-[100%] w-full overflow-hidden">
                             <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                                 <Viewer
-                                    fileUrl="https://utfs.io/f/aT7im4PMBNXCdOQlUoCbZguaKWepqki5fRJlwyTcmXP49roE"
+                                    fileUrl={book.demoPdfUrl ?? ""}
                                     defaultScale={1.2}
                                     enableSmoothScroll
                                 />
